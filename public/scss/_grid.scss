@@ -1,0 +1,25 @@
+@media (min-width: 1280px) {
+	.container,
+	.container-lg,
+	.container-md,
+	.container-sm,
+	.container-xl {
+		max-width: 1215px;
+	}
+}
+@media (min-width: 1400px) {
+	.container,
+	.container-lg,
+	.container-md,
+	.container-sm,
+	.container-xl {
+		max-width: 1390px;
+	}
+}
+
+@media (min-width: 768px) {
+	.col-md-20 {
+		flex: 20% 1;
+		max-width: 20%;
+	}
+}

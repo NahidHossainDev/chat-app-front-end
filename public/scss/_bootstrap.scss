@@ -1,0 +1,11 @@
+// colors
+$primary: #016956;
+$border: #eeeeee;
+$secondary: #999999;
+
+// typography
+$font-size-base: 0.875rem !default; // typically `14px`
+$font-size-base-xs: 0.813rem !default; // typically `13px`
+$font-family-sans-serif: "Segoe UI", sans-serif !default;
+
+@import "~bootstrap/scss/bootstrap.scss";

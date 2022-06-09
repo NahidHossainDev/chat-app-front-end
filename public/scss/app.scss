@@ -1,0 +1,100 @@
+@import "./bootstrap";
+@import "./card";
+@import "./dropdown";
+@import "./grid";
+@import "./fonts";
+@import "./variables";
+@import "./root";
+@import url("https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap");
+
+body {
+    font-family: "Jost", sans-serif;
+    font-size: 16px;
+    background-color: #0a1014;
+    height: 100vh;
+}
+h1 {
+    font-size: 2.5rem;
+}
+h2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+}
+h3 {
+    font-size: 1.6rem;
+}
+h4 {
+    font-size: 1.3rem;
+}
+h5 {
+    font-size: 1.2rem;
+}
+h6 {
+    font-size: 1rem;
+}
+
+.container {
+    background-color: rgba(52, 70, 81, 0.3);
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.fw-600 {
+    font-weight: 600;
+}
+
+.text-orange {
+    color: var(--deep-orange);
+}
+
+.text-primary2 {
+    color: var(--primary-two);
+}
+
+.bg-primary-bg {
+    background-color: var(--primary-bg);
+}
+
+.vertical-horizontal-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+// .text-secondary {
+// 	color: #999999;
+// }
+
+section {
+    margin: 3.125rem 0;
+}
+
+.VerticalScroller {
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: #ececec;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #d6d6d6;
+        border-radius: 10px;
+    }
+
+    // &::-webkit-scrollbar-thumb:hover {
+    // 	background: #029c50;
+    // }
+
+    .custom-control-label {
+        color: var(--secondary);
+    }
+}
