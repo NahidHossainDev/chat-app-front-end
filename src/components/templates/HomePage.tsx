@@ -1,8 +1,37 @@
-import React, { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
+import { io } from "socket.io-client";
 import styled from "styled-components";
 
+const ENDPOINT = "localhost:5000";
+const socket = io(ENDPOINT);
+
 export const HomePage: FC = () => {
+    const [text, setText] = useState<string>("");
+    const [message, setMessage] = useState<Object[]>([]);
+
+    useEffect(() => {
+        socket.on("connect", () => {});
+
+        return () => {
+            console.log("cleanup...");
+            // socket.emit("disconnect");
+            socket.off();
+        };
+    }, []);
+
+    useEffect(() => {
+        socket.on("message", (msg) => {
+            console.log(msg);
+            setMessage([...message, msg]);
+        });
+    }, [message]);
+
+    const sendMessage = (msg: string) => {
+        socket.emit("send_message", text, () => setText(""));
+        setText("");
+    };
+
     return (
         <Wrapper>
             <Row className='h-100'>
@@ -38,7 +67,15 @@ export const HomePage: FC = () => {
                         </div>
                     </div>
                     <footer>
-                        <input type='text' placeholder='Enter your message' />
+                        <input
+                            type='text'
+                            placeholder='Enter your message'
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            onKeyDown={(e) => {
+                                e.key === "Enter" ? sendMessage(text) : null;
+                            }}
+                        />
                     </footer>
                 </Col>
             </Row>
