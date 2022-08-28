@@ -1,6 +1,6 @@
 import { NextPageContext } from "next";
 import { BaseAPI } from "./baseAPI";
-import { BR, IAuth } from "./interface";
+import { BR, IAuth, ICreateAcc } from "./interface";
 
 class All_API extends BaseAPI {
 	constructor(baseURL: string) {
@@ -23,14 +23,7 @@ class All_API extends BaseAPI {
 	 */
 	validateAuth = (ctx: NextPageContext) => this.get<BR<IAuth>>("validate-auth", ctx);
 
-	/**
-	 * User Registration - First step
-	 * @param firstName
-	 * @param lastName
-	 * @param mobileNumber
-	 * @returns
-	 */
-	authRegister = (payload: object) => this.post<BR<IAuth>>("users/create-account", payload);
+	authRegister = (payload: object) => this.post<BR<ICreateAcc>>("users/create-account", payload);
 }
 
 export const all_API = new All_API(process.env.apiURL);
