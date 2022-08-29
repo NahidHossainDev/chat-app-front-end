@@ -1,13 +1,13 @@
 import { LoginUnit, MainLayout } from "@components/templates";
+import { withoutAuth } from "@libs/hoc";
 import { NextPage } from "next";
-import React from "react";
 
 const Login: NextPage = () => {
-    return (
-        <MainLayout>
-            <LoginUnit />
-        </MainLayout>
-    );
+	return (
+		<MainLayout>
+			<LoginUnit />
+		</MainLayout>
+	);
 };
 
-export default Login;
+export default withoutAuth(Login);

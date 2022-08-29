@@ -32,9 +32,7 @@ export const Signup: FC = () => {
 					return err;
 				});
 			}
-		} catch (err) {
-			console.log(err);
-		}
+		} catch (err) {}
 	};
 
 	// const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -24,7 +24,6 @@ const withAuth = (WrappedComponent: any) => {
 		const redirectURL = getRedirectURL(ctx);
 
 		if (!userAuth?.auth) {
-			console.log("nahid", redirectURL);
 			if (ctx.res) {
 				ctx.res.writeHead(302, { location: redirectURL });
 				ctx.res.end();

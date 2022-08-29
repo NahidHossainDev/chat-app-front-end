@@ -1,5 +1,5 @@
 import store, { wrapper } from "@store";
-import { authSignIn } from "@store/user/user.slice";
+import { authSignIn, updateIsMobile } from "@store/user/user.slice";
 import { isMobileDevice } from "@utils/helpers";
 import type { AppContext, AppProps } from "next/app";
 import App from "next/app";
@@ -22,11 +22,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 		router.events.on("routeChangeError", () => NProgress.done());
 		if (pageProps?.authUser) {
 			const { token, ...rest } = pageProps.authUser;
-			// console.log(token);
 			if (token) {
 				dispatch(authSignIn(rest));
 			}
 		}
+		dispatch(updateIsMobile(pageProps?.isMobile));
 	}, []);
 	return <Component {...pageProps} />;
 }
@@ -46,7 +46,6 @@ MyApp.getInitialProps = async (appContext: ICustomNextAppContext) => {
 		}
 	} else if (typeof window !== "undefined") {
 		const { user } = store.getState();
-
 		ctx.isMobile = user.isMobile;
 		if (user.isAuthenticate) {
 			const data = { ...user, token: cookies.token };

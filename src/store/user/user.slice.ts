@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: IUserState = {
+	id: null,
 	name: null,
 	mobile: null,
 	email: null,
@@ -14,9 +15,11 @@ export const userSlice = createSlice({
 	initialState,
 	reducers: {
 		authSignIn: (state, action: PayloadAction<IUserState>) => {
-			console.log(action.payload);
+			return { ...state, ...action.payload, isAuthenticate: true };
+		},
 
-			state = { ...action.payload, isAuthenticate: true };
+		updateIsMobile: (state, action: PayloadAction<boolean>) => {
+			state.isMobile = action.payload;
 		},
 
 		authSignOut: (state) => {
@@ -26,10 +29,11 @@ export const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
-export const { authSignIn, authSignOut } = userSlice.actions;
+export const { authSignIn, authSignOut, updateIsMobile } = userSlice.actions;
 export const getUserState = (state) => state.user;
 
 type IUserState = {
+	id: string;
 	name: string;
 	mobile: string;
 	email: string;

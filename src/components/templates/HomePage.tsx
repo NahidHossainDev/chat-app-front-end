@@ -1,5 +1,6 @@
+import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
-import { Card, Col, Row } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import styled from "styled-components";
 
 const ENDPOINT = "localhost:5000";
@@ -13,7 +14,6 @@ export const HomePage: FC = () => {
 		// socket.on("connect", () => {});
 
 		return () => {
-			console.log("cleanup...");
 			// socket.emit("disconnect");
 			// socket.off();
 		};
@@ -31,6 +31,7 @@ export const HomePage: FC = () => {
 		setText("");
 	};
 
+	const router = useRouter();
 	return (
 		<Wrapper>
 			<Row className='h-100'>
@@ -75,6 +76,9 @@ export const HomePage: FC = () => {
 								e.key === "Enter" ? sendMessage(text) : null;
 							}}
 						/>
+						<Button onClick={() => router.push("/login")} type='button'>
+							go to home
+						</Button>
 					</footer>
 				</Col>
 			</Row>

@@ -11,7 +11,7 @@ export const setAuthUser = async (data: IAuth): Promise<void> => {
 		// sameSite: 'Strict',
 		// secure: process.env.nodeEnv === 'production',
 	});
-	store.dispatch(authSignIn(rest));
+	store.dispatch(authSignIn({ ...rest }));
 };
 
 /**

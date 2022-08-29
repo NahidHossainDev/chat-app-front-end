@@ -21,9 +21,7 @@ export const Login: FC = () => {
 					setAuthUser(data);
 					router.push(router.query?.redirect ? String(router.query.redirect) : "/");
 				}
-			} catch (err) {
-				console.log(err);
-			}
+			} catch (err) {}
 		}
 	};
 
