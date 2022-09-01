@@ -1,14 +1,20 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Col } from "react-bootstrap";
 import styled from "styled-components";
 
-export const MessageView: FC = () => {
+export const MessageView: FC<PropsType> = ({ selectedConversation }) => {
 	const [text, setText] = useState<string>("");
 	const [message, setMessage] = useState<Object[]>([]);
 	const sendMessage = (msg: string) => {
 		// socket.emit("send_message", text, () => setText(""));
 		setText("");
 	};
+
+	const getMessage = async () => {};
+
+	useEffect(() => {
+		getMessage();
+	}, [selectedConversation]);
 
 	return (
 		<Wrapper xs={9}>
@@ -45,6 +51,10 @@ export const MessageView: FC = () => {
 	);
 };
 
+interface PropsType {
+	selectedConversation: string;
+}
+
 const Wrapper = styled(Col)`
 	color: white;
 	.Text_Container {
@@ -53,6 +63,7 @@ const Wrapper = styled(Col)`
 		width: 100%;
 		align-items: flex-end;
 		padding: 0 3rem;
+		background-color: #243038;
 		.oponent {
 			.oponent-text {
 				padding: 6px 10px;
@@ -102,7 +113,7 @@ const Wrapper = styled(Col)`
 	}
 
 	footer {
-		background-color: #30414b;
+		background-color: #30434e;
 		padding: 20px;
 		width: 100%;
 

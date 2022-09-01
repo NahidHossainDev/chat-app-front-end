@@ -29,7 +29,6 @@ export const Login: FC = () => {
 		const { name, value } = e.target;
 		setValues((prevState) => ({ ...prevState, [name]: value }));
 	};
-
 	return (
 		<Wrapper>
 			<Form className=' m-auto p-4 rounded' onSubmit={handleSubmit}>

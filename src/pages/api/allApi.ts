@@ -1,6 +1,7 @@
 import { NextPageContext } from "next";
 import { BaseAPI } from "./baseAPI";
 import { BR, IAuth, ICreateAcc } from "./interface";
+import { IConversationList, ISearchUserData } from "./interface/user";
 
 class All_API extends BaseAPI {
 	constructor(baseURL: string) {
@@ -24,6 +25,16 @@ class All_API extends BaseAPI {
 	validateAuth = (ctx: NextPageContext) => this.get<BR<IAuth>>("validate-auth", ctx);
 
 	authRegister = (payload: object) => this.post<BR<ICreateAcc>>("users/create-account", payload);
+
+	searchUser = (payload: object) => this.post<BR<ISearchUserData>>("users/searchUser", payload);
+
+	addNewConversation = (payload: object) => this.post<BR<String>>("inbox/addConversation", payload);
+
+	getAllConversation = () => this.get<BR<IConversationList[]>>("inbox/getConversationLists");
+
+	getMessages = (id: string) => this.get<BR<IConversationList[]>>(`inbox/messages/${id}`);
+
+	sendMessage = (payload: object) => this.post<BR<String>>("inbox/sendMessage", payload);
 }
 
 export const all_API = new All_API(process.env.apiURL);
