@@ -28,7 +28,6 @@ export const MessageView: FC<PropsType> = ({ activeConv, messages, setMessages }
 					setCount((prev) => prev + 1);
 					setMessages((prev) => [...prev, data]);
 					console.log(count, "api response");
-
 					return true;
 				}
 			} catch (err) {

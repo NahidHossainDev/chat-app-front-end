@@ -1,7 +1,7 @@
-import { ButtonProps, Dropdown, DropdownProps } from '@components/atoms';
-import Icon, { IconProps } from '@libs/icons';
-import { FC } from 'react';
-import styled from 'styled-components';
+import { ButtonProps, Dropdown, DropdownProps } from "@components/atoms";
+import Icon, { IconProps } from "@libs/icons";
+import { FC } from "react";
+import styled from "styled-components";
 
 export const IconDropdown: FC<IconDropdownProps> = (props) => {
 	const { isCount, count, path, width, height, fill, children, ...rest } = props;
@@ -10,7 +10,7 @@ export const IconDropdown: FC<IconDropdownProps> = (props) => {
 	return (
 		<Dropdown
 			buttonLabel={
-				<div className="position-relative">
+				<div className='position-relative'>
 					<Icon {...iconProps} /> {isCount && <Count>{count}</Count>}
 				</div>
 			}
@@ -22,16 +22,16 @@ export const IconDropdown: FC<IconDropdownProps> = (props) => {
 };
 
 export interface IconDropdownProps
-	extends Omit<DropdownProps, 'buttonLabel'>,
-		Pick<IconProps, 'path' | 'width' | 'height' | 'fill'>,
+	extends Omit<DropdownProps, "buttonLabel">,
+		Pick<IconProps, "path" | "width" | "height" | "fill">,
 		ButtonProps {
 	isCount?: boolean;
 	count?: number;
 }
 
 IconDropdown.defaultProps = {
-	variant: 'link',
-	fill: 'var(--dark)',
+	variant: "link",
+	fill: "var(--bs-dark)",
 	isCount: false,
 	count: 0,
 };
@@ -47,6 +47,6 @@ const Count = styled.span`
 	position: absolute;
 	top: -3px;
 	right: -3px;
-	color: var(--white);
-	background-color: var(--primary);
+	color: var(--bs-white);
+	background-color: var(--bs-primary);
 `;

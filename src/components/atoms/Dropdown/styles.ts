@@ -1,11 +1,11 @@
-import styled, { css } from 'styled-components';
-import { DropdownProps } from '.';
+import styled, { css } from "styled-components";
+import { DropdownProps } from ".";
 
 export const DropdownWrapper = styled.div`
 	position: relative;
 `;
 
-export const DropdownList = styled.div<Pick<DropdownProps, 'alignRight'>>`
+export const DropdownList = styled.div<Pick<DropdownProps, "alignRight">>`
 	position: absolute;
 	top: 100%;
 	min-width: 10rem;
@@ -13,7 +13,7 @@ export const DropdownList = styled.div<Pick<DropdownProps, 'alignRight'>>`
 	margin: 0 0 0 auto;
 	text-align: left;
 	display: block;
-	background-color: var(--white);
+	background-color: var(--bs-white);
 	border-radius: 0.625rem;
 	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 	z-index: 1000;
@@ -33,7 +33,7 @@ export const DropdownList = styled.div<Pick<DropdownProps, 'alignRight'>>`
 	.dropdown_Item {
 		width: 100%;
 		display: block;
-		color: var(--dark);
+		color: var(--bs-dark);
 		text-align: left;
 		padding: 0.313rem 1rem;
 		border: 0;
@@ -44,7 +44,7 @@ export const DropdownList = styled.div<Pick<DropdownProps, 'alignRight'>>`
 		&:hover {
 			cursor: pointer;
 			text-decoration: none;
-			background-color: var(--light);
+			background-color: var(--bs-light);
 		}
 	}
 `;

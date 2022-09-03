@@ -1,7 +1,7 @@
-import { ButtonProps, Dropdown, DropdownProps } from '@components/atoms';
-import Icon, { IconProps } from '@libs/icons';
-import { FC } from 'react';
-import styled from 'styled-components';
+import { ButtonProps, Dropdown, DropdownProps } from "@components/atoms";
+import Icon, { IconProps } from "@libs/icons";
+import { FC } from "react";
+import styled from "styled-components";
 
 export const LabelDropdown: FC<LabelDropdownProps> = (props) => {
 	const { label, smallLabel, isCount, count, path, width, height, fill, children, ...rest } = props;
@@ -10,9 +10,9 @@ export const LabelDropdown: FC<LabelDropdownProps> = (props) => {
 	return (
 		<Dropdown
 			buttonLabel={
-				<div className="d-flex align-items-center">
+				<div className='d-flex align-items-center'>
 					<ButtonLabel>
-						{smallLabel && <small className="d-block">{smallLabel}</small>}
+						{smallLabel && <small className='d-block'>{smallLabel}</small>}
 						{label} {isCount && <Count>{count}</Count>}
 					</ButtonLabel>
 					<Icon {...iconProps} />
@@ -26,8 +26,8 @@ export const LabelDropdown: FC<LabelDropdownProps> = (props) => {
 };
 
 export interface LabelDropdownProps
-	extends Omit<DropdownProps, 'buttonLabel'>,
-		Pick<IconProps, 'path' | 'width' | 'height' | 'fill'>,
+	extends Omit<DropdownProps, "buttonLabel">,
+		Pick<IconProps, "path" | "width" | "height" | "fill">,
 		ButtonProps {
 	label: string;
 	smallLabel?: string;
@@ -36,14 +36,14 @@ export interface LabelDropdownProps
 }
 
 LabelDropdown.defaultProps = {
-	variant: 'link',
-	fill: 'var(--dark)',
+	variant: "link",
+	fill: "var(--bs-dark)",
 	isCount: false,
 	count: 0,
 };
 
 const ButtonLabel = styled.p`
-	color: var(--dark);
+	color: var(--bs-dark);
 	text-align: left;
 	line-height: 1.3;
 	margin: 0 0 0 0.5rem;
@@ -65,6 +65,6 @@ const Count = styled.span`
 	text-align: center;
 	line-height: 1.5;
 	border-radius: 50rem;
-	color: var(--white);
-	background-color: var(--primary);
+	color: var(--bs-white);
+	background-color: var(--bs-primary);
 `;

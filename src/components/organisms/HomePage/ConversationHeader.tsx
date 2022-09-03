@@ -1,4 +1,8 @@
-import Icon, { riSettings } from "@libs/icons";
+import { DropdownItem } from "@components/atoms";
+import { IconDropdown } from "@components/molecules";
+import { riSettings } from "@libs/icons";
+import { revokeAuthUser } from "@store/user/user.action";
+import Router from "next/router";
 import { FC } from "react";
 import styled from "styled-components";
 
@@ -11,7 +15,17 @@ export const ConversationHeader: FC<PropsType> = ({ name, mobile }) => {
 					<small className='text-secondary'>{mobile}</small>
 				</div>
 				<span role='button' className='ms-auto'>
-					<Icon path={riSettings} />
+					<IconDropdown variant='primary' path={riSettings} height={18} width={18}>
+						<DropdownItem
+							type='button'
+							onClick={async () => {
+								await revokeAuthUser();
+								Router.push("/");
+							}}
+						>
+							Log Out
+						</DropdownItem>
+					</IconDropdown>
 				</span>
 			</div>
 		</Wrapper>

@@ -1,17 +1,22 @@
 import { Avatar } from "@components/atoms";
 import { IconInput } from "@components/molecules";
 import { all_API } from "@libs/api/allApi";
-import { IConversationList, ISearchUserData } from "@libs/api/interface/user";
+import { ISearchUserData } from "@libs/api/interface/user";
 import { useDebounced } from "@libs/hooks/useDebounce";
 import Icon, { close, search } from "@libs/icons";
+import { updateCurrentConversation } from "@store/conversations";
+import { useRouter } from "next/router";
 import { ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
-export const SearchModal: FC<PropsType> = ({ show, setShow, getConversations, setSelectedConversation }) => {
+export const SearchModal: FC<PropsType> = ({ show, setShow }) => {
 	const initialValues = { user: "" };
 	const [values, setValues] = useState<typeof initialValues>(initialValues);
 	const [searchRes, setSearchRes] = useState<ISearchUserData["users"]>([]);
+	const router = useRouter();
+	const dispatch = useDispatch();
 
 	const getSearchUsers = async () => {
 		if (values.user) {
@@ -30,8 +35,8 @@ export const SearchModal: FC<PropsType> = ({ show, setShow, getConversations, se
 		try {
 			const { success, data, message } = await all_API.addNewConversation(payload);
 			if (success) {
-				getConversations();
-				setSelectedConversation(data);
+				router.push(router.asPath);
+				dispatch(updateCurrentConversation(data));
 				setShow(false);
 			}
 		} catch (err) {}
@@ -113,8 +118,6 @@ const ModalWrapper = styled(Modal)`
 interface PropsType {
 	show: boolean;
 	setShow: Dispatch<SetStateAction<boolean>>;
-	getConversations: () => Promise<void>;
-	setSelectedConversation: Dispatch<SetStateAction<IConversationList>>;
 }
 
 const Item = styled.li`

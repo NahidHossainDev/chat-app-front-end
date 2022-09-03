@@ -31,7 +31,7 @@ class All_API extends BaseAPI {
 
 	addNewConversation = (payload: object) => this.post<BR<IConversationList>>("inbox/addConversation", payload);
 
-	getAllConversation = () => this.get<BR<IConversationList[]>>("inbox/getConversationLists");
+	getAllConversation = (ctx: NextPageContext) => this.get<BR<IConversationList[]>>("inbox/getConversationLists", ctx);
 
 	getMessages = (id: string) => this.get<BR<IMessages>>(`inbox/messages/${id}`);
 

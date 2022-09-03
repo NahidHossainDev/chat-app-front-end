@@ -1,41 +1,26 @@
 import { Button } from "@components/atoms";
 import { IActiveUsers } from "@components/templates/HomePage";
-import { all_API } from "@libs/api/allApi";
-import { IConversationList } from "@libs/api/interface/user";
+import { getConversationState, updateCurrentConversation } from "@store/conversations";
 import { getUserState } from "@store/user/user.slice";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { Col } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { ConversationHeader } from "./ConversationHeader";
 import { SearchModal } from "./SearchModal";
 
-export const ConversationLists: FC<PropsType> = ({ activeConv, setActiveConv, activeUsers }) => {
-	const [conversations, setConversations] = useState<IConversationList[]>([]);
+export const ConversationLists: FC<PropsType> = ({ activeUsers }) => {
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const user = useSelector(getUserState);
-
-	const getAllConversations = async () => {
-		try {
-			const { success, data, message } = await all_API.getAllConversation();
-			if (success) {
-				setConversations((prev) => [...data]);
-			}
-		} catch (err) {}
-	};
-
-	useEffect(() => {
-		getAllConversations();
-	}, []);
-
-	console.log(activeUsers);
+	const { currentConversaion, allConversations } = useSelector(getConversationState);
+	const dispatch = useDispatch();
 
 	return (
 		<Wrapper xs={3} className='h-100'>
 			<ConversationHeader name={user.name} mobile={user.mobile} />
 			<div className='all-friends-container VerticalScroller'>
-				{conversations?.length > 0 ? (
-					conversations.map((el) => {
+				{allConversations?.length > 0 ? (
+					allConversations.map((el) => {
 						const item = user.id === el.creator.id ? el.participant : el.creator;
 						const isActive = activeUsers?.some((user) => user.userId === item.id);
 
@@ -43,10 +28,10 @@ export const ConversationLists: FC<PropsType> = ({ activeConv, setActiveConv, ac
 							<ConversationListItem
 								key={el?._id}
 								className={`px-3 py-1 border-bottom border-secondary ${
-									activeConv?._id === el._id && "active"
+									currentConversaion?._id === el._id && "active"
 								}`}
 								role='button'
-								onClick={() => setActiveConv(el)}
+								onClick={() => dispatch(updateCurrentConversation(el))}
 							>
 								<p className='mb-0 text-light'>{item.name}</p>
 								<small className='text-secondary'>
@@ -71,20 +56,15 @@ export const ConversationLists: FC<PropsType> = ({ activeConv, setActiveConv, ac
 			>
 				Create New Chat
 			</Button>
-			<SearchModal
-				show={showModal}
-				setShow={setShowModal}
-				getConversations={getAllConversations}
-				setSelectedConversation={setActiveConv}
-			/>
+			<SearchModal show={showModal} setShow={setShowModal} />
 		</Wrapper>
 	);
 };
 
 interface PropsType {
-	activeConv: IConversationList;
+	// activeConv: IConversationList;
 	activeUsers: IActiveUsers[];
-	setActiveConv: Dispatch<SetStateAction<IConversationList>>;
+	// setActiveConv: Dispatch<SetStateAction<IConversationList>>;
 }
 
 const Wrapper = styled(Col)`

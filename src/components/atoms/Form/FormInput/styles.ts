@@ -37,7 +37,7 @@ export const FormLabel = styled.label<FormInputProps>`
 			if (required) {
 				return css`
 					content: " *";
-					color: var(--danger);
+					color: var(--bs-danger);
 				`;
 			}
 		}}

@@ -8,7 +8,7 @@ const store = configureStore({
 
 const makeStore = () => store;
 
-export const wrapper = createWrapper<any>(makeStore);
+export const wrapper = createWrapper<AppStore>(makeStore);
 export default store;
 
 export type AppStore = ReturnType<typeof makeStore>;

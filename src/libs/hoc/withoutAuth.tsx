@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextPageContext } from 'next';
-import Router from 'next/router';
+import { NextPageContext } from "next";
+import Router from "next/router";
 
-const redirectURL = '/';
+const redirectURL = "/";
 const checkAuth = (ctx: NextPageContext) => {
 	const { authUser } = ctx;
 	if (authUser && authUser.token) return { auth: true };

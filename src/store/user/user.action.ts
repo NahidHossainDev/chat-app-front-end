@@ -18,6 +18,8 @@ export const setAuthUser = async (data: IAuth): Promise<void> => {
  * Revoke app user access
  */
 export const revokeAuthUser = (): Promise<void> => {
+	console.log("clicked");
+
 	return new Promise((resolve) => {
 		destroyCookie(null, "token");
 		store.dispatch(authSignOut());

@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-export * from '../FormInput/styles';
+import styled from "styled-components";
+export * from "../FormInput/styles";
 
 export const Indicator = styled.div`
 	position: absolute;
@@ -23,7 +23,7 @@ export const NavItems = styled.ul`
 	margin: 0;
 	padding: 4px 0;
 	border-radius: 0.25rem;
-	background-color: var(--white);
+	background-color: var(--bs-white);
 	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 4px 11px rgba(0, 0, 0, 0.1);
 	z-index: 99;
 `;
@@ -49,7 +49,7 @@ export const NavItem = styled.li`
 	}
 
 	&.isActive {
-		color: var(--white);
-		background-color: var(--primary);
+		color: var(--bs-white);
+		background-color: var(--bs-primary);
 	}
 `;
