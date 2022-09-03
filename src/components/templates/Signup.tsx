@@ -1,5 +1,5 @@
 import { FormInput } from "@components/atoms";
-import { all_API } from "@pages/api/allApi";
+import { all_API } from "@libs/api/allApi";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, FC, useState } from "react";

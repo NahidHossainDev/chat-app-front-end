@@ -1,4 +1,4 @@
-import { IAuth } from "@pages/api/interface";
+import { IAuth } from "@libs/api/interface";
 import store from "@store";
 import { destroyCookie, setCookie } from "nookies";
 import { authSignIn, authSignOut } from "./user.slice";

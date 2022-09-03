@@ -9,7 +9,7 @@ import NProgress from "nprogress";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import "../../public/scss/app.scss";
-import { all_API } from "./api/allApi";
+import { all_API } from "../libs/api/allApi";
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const router = useRouter();

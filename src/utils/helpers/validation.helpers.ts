@@ -48,7 +48,14 @@ export const isEmailAddress = (email: string): boolean => {
  */
 export const isNullProperties = (obj: Record<string, any>): boolean => {
 	for (const key in obj) {
-		if (obj[key] !== null && obj[key] !== '') return false;
+		if (obj[key] !== null && obj[key] !== "") return false;
 	}
 	return true;
+};
+
+export const formatStatus = (status: string): string => {
+	return status
+		.toLowerCase()
+		.replace(/_/g, " ")
+		.replace(/\b(\w)/g, (x) => x.toUpperCase());
 };

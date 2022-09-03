@@ -1,14 +1,14 @@
 import { Avatar } from "@components/atoms";
 import { IconInput } from "@components/molecules";
+import { all_API } from "@libs/api/allApi";
+import { IConversationList, ISearchUserData } from "@libs/api/interface/user";
 import { useDebounced } from "@libs/hooks/useDebounce";
 import Icon, { close, search } from "@libs/icons";
-import { all_API } from "@pages/api/allApi";
-import { ISearchUserData } from "@pages/api/interface/user";
 import { ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import styled from "styled-components";
 
-export const SearchModal: FC<PropsType> = ({ show, setShow, getConversations }) => {
+export const SearchModal: FC<PropsType> = ({ show, setShow, getConversations, setSelectedConversation }) => {
 	const initialValues = { user: "" };
 	const [values, setValues] = useState<typeof initialValues>(initialValues);
 	const [searchRes, setSearchRes] = useState<ISearchUserData["users"]>([]);
@@ -23,6 +23,7 @@ export const SearchModal: FC<PropsType> = ({ show, setShow, getConversations }) 
 			} catch (err) {}
 		}
 	};
+
 	const addNewConversation = async (data: ISearchUserData["users"][0]) => {
 		const payload = { ...data, id: data._id };
 		delete payload._id;
@@ -30,6 +31,7 @@ export const SearchModal: FC<PropsType> = ({ show, setShow, getConversations }) 
 			const { success, data, message } = await all_API.addNewConversation(payload);
 			if (success) {
 				getConversations();
+				setSelectedConversation(data);
 				setShow(false);
 			}
 		} catch (err) {}
@@ -39,7 +41,7 @@ export const SearchModal: FC<PropsType> = ({ show, setShow, getConversations }) 
 		() => {
 			getSearchUsers();
 		},
-		300,
+		400,
 		[values]
 	);
 
@@ -112,6 +114,7 @@ interface PropsType {
 	show: boolean;
 	setShow: Dispatch<SetStateAction<boolean>>;
 	getConversations: () => Promise<void>;
+	setSelectedConversation: Dispatch<SetStateAction<IConversationList>>;
 }
 
 const Item = styled.li`

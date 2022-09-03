@@ -1,14 +1,15 @@
 import { Button } from "@components/atoms";
-import { all_API } from "@pages/api/allApi";
-import { IConversationList } from "@pages/api/interface/user";
+import { all_API } from "@libs/api/allApi";
+import { IConversationList } from "@libs/api/interface/user";
 import { getUserState } from "@store/user/user.slice";
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Col } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { ConversationHeader } from "./ConversationHeader";
 import { SearchModal } from "./SearchModal";
 
-export const ConversationLists: FC = () => {
+export const ConversationLists: FC<PropsType> = ({ activeConv, setActiveConv }) => {
 	const [conversations, setConversations] = useState<IConversationList[]>([]);
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const user = useSelector(getUserState);
@@ -28,12 +29,20 @@ export const ConversationLists: FC = () => {
 
 	return (
 		<Wrapper xs={3} className='h-100'>
-			<div className='all-friends-container'>
+			<ConversationHeader name={user.name} mobile={user.mobile} />
+			<div className='all-friends-container VerticalScroller'>
 				{conversations?.length > 0 ? (
 					conversations.map((el) => {
 						const item = user.id === el.creator.id ? el.participant : el.creator;
 						return (
-							<ConversationListItem key={el?._id} className='px-3 py-1 border-bottom border-secondary'>
+							<ConversationListItem
+								key={el?._id}
+								className={`px-3 py-1 border-bottom border-secondary ${
+									activeConv?._id === el._id && "active"
+								}`}
+								role='button'
+								onClick={() => setActiveConv(el)}
+							>
 								<p className='mb-0 text-light'>{item.name}</p>
 								<small className='text-secondary'>{item?.mobile}</small>
 							</ConversationListItem>
@@ -55,10 +64,20 @@ export const ConversationLists: FC = () => {
 			>
 				Create New Chat
 			</Button>
-			<SearchModal show={showModal} setShow={setShowModal} getConversations={getAllConversations} />
+			<SearchModal
+				show={showModal}
+				setShow={setShowModal}
+				getConversations={getAllConversations}
+				setSelectedConversation={setActiveConv}
+			/>
 		</Wrapper>
 	);
 };
+
+interface PropsType {
+	activeConv: IConversationList;
+	setActiveConv: Dispatch<SetStateAction<IConversationList>>;
+}
 
 const Wrapper = styled(Col)`
 	.all-friends-container {
@@ -73,8 +92,10 @@ const Wrapper = styled(Col)`
 `;
 
 const ConversationListItem = styled.div`
+	&.active {
+		background-color: #29363d;
+	}
 	&:hover {
 		background-color: #29363d;
-		cursor: pointer;
 	}
 `;
