@@ -1,4 +1,5 @@
 import { Button } from "@components/atoms";
+import { IActiveUsers } from "@components/templates/HomePage";
 import { all_API } from "@libs/api/allApi";
 import { IConversationList } from "@libs/api/interface/user";
 import { getUserState } from "@store/user/user.slice";
@@ -9,7 +10,7 @@ import styled from "styled-components";
 import { ConversationHeader } from "./ConversationHeader";
 import { SearchModal } from "./SearchModal";
 
-export const ConversationLists: FC<PropsType> = ({ activeConv, setActiveConv }) => {
+export const ConversationLists: FC<PropsType> = ({ activeConv, setActiveConv, activeUsers }) => {
 	const [conversations, setConversations] = useState<IConversationList[]>([]);
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const user = useSelector(getUserState);
@@ -27,6 +28,8 @@ export const ConversationLists: FC<PropsType> = ({ activeConv, setActiveConv }) 
 		getAllConversations();
 	}, []);
 
+	console.log(activeUsers);
+
 	return (
 		<Wrapper xs={3} className='h-100'>
 			<ConversationHeader name={user.name} mobile={user.mobile} />
@@ -34,6 +37,8 @@ export const ConversationLists: FC<PropsType> = ({ activeConv, setActiveConv }) 
 				{conversations?.length > 0 ? (
 					conversations.map((el) => {
 						const item = user.id === el.creator.id ? el.participant : el.creator;
+						const isActive = activeUsers?.some((user) => user.userId === item.id);
+
 						return (
 							<ConversationListItem
 								key={el?._id}
@@ -44,7 +49,9 @@ export const ConversationLists: FC<PropsType> = ({ activeConv, setActiveConv }) 
 								onClick={() => setActiveConv(el)}
 							>
 								<p className='mb-0 text-light'>{item.name}</p>
-								<small className='text-secondary'>{item?.mobile}</small>
+								<small className='text-secondary'>
+									{item?.mobile} <span className='text-success'> {isActive ? "(Active)" : ""}</span>
+								</small>
 							</ConversationListItem>
 						);
 					})
@@ -76,6 +83,7 @@ export const ConversationLists: FC<PropsType> = ({ activeConv, setActiveConv }) 
 
 interface PropsType {
 	activeConv: IConversationList;
+	activeUsers: IActiveUsers[];
 	setActiveConv: Dispatch<SetStateAction<IConversationList>>;
 }
 

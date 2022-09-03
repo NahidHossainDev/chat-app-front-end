@@ -62,7 +62,7 @@ MyApp.getInitialProps = async (appContext: ICustomNextAppContext) => {
 	return appProps;
 };
 
-export default wrapper.withRedux(MyApp);
+export default wrapper?.withRedux(MyApp);
 
 export interface ICustomNextAppContext extends AppContext {
 	ctx: any;
