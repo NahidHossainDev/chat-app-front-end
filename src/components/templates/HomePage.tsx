@@ -10,7 +10,6 @@ import { io } from "socket.io-client";
 
 // const ENDPOINT = "localhost:5000";
 // const socket = io(ENDPOINT);
-const socket = io("http://localhost:5000/");
 
 export const HomePage: FC = () => {
 	// const [currentConversaion, setActiveConv] = useState<IConversationList>(null);
@@ -19,6 +18,7 @@ export const HomePage: FC = () => {
 	const user = useSelector(getUserState);
 	const { currentConversaion } = useSelector(getConversationState);
 
+	const socket = io(process.env.apiURL);
 	useEffect(() => {
 		if (user.id) {
 			console.log("nahid1");
@@ -33,7 +33,7 @@ export const HomePage: FC = () => {
 		});
 	}, []);
 
-	console.log({ currentConversaion });
+	console.log({ currentConversaion }, { user });
 
 	useEffect(() => {
 		socket.on("new_message", (data: IMessages["messages"][0]) => {

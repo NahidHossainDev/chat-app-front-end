@@ -34,7 +34,6 @@ export const Signup: FC = () => {
 				setErrs((prevState) => {
 					const err = initailErrors;
 					for (const key in data?.errors) {
-						console.log(key);
 						err[key] = data?.errors[key].msg;
 					}
 					return err;
@@ -42,7 +41,6 @@ export const Signup: FC = () => {
 			}
 		} catch (err) {}
 	};
-	console.log(errs);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;

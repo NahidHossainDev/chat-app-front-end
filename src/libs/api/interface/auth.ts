@@ -1,12 +1,3 @@
-export interface IAuth {
-	id: string;
-	name: string;
-	mobile: string;
-	email: string;
-	role: string;
-	token?: string;
-}
-
 interface IErr {
 	value: string;
 	msg: string;
@@ -24,4 +15,20 @@ interface ICreateAccErrors {
 
 export interface ICreateAcc {
 	errors?: ICreateAccErrors;
+}
+
+interface ILoginErr {
+	common?: IErr;
+	username?: IErr;
+	password?: IErr;
+}
+
+export interface IAuth {
+	id: string;
+	name: string;
+	mobile: string;
+	email: string;
+	role: string;
+	token: string;
+	errors?: ILoginErr;
 }
