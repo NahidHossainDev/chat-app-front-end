@@ -15,12 +15,13 @@ export const MessageView: FC<PropsType> = ({ activeConv, messages, setMessages }
 
 	const sendMessage = async (text: string) => {
 		if (text) {
+			const reciver = activeConv?.creator?.id === user?.id ? activeConv.participant : activeConv?.creator;
 			const payload = {
 				conversationId: activeConv?._id,
 				message: text,
-				receiverId: activeConv?.participant?.id,
-				receiverName: activeConv?.participant?.name,
-				avatar: activeConv?.participant?.avatar,
+				receiverId: reciver?.id,
+				receiverName: reciver?.name,
+				avatar: reciver?.avatar,
 			};
 			try {
 				const { success, data, message } = await all_API.sendMessage(payload);
