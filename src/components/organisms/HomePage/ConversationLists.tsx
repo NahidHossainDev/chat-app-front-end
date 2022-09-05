@@ -33,7 +33,12 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers }) => {
 								role='button'
 								onClick={() => dispatch(updateCurrentConversation(el))}
 							>
-								<p className='mb-0 text-light'>{item.name}</p>
+								<p className='mb-0 text-light'>
+									{item.name}{" "}
+									{el?.unseenMsgCount > 0 && (
+										<span className='bg-danger pill'>{el?.unseenMsgCount}</span>
+									)}
+								</p>
 								<small className='text-secondary'>
 									{item?.mobile} <span className='text-success'> {isActive ? "(Active)" : ""}</span>
 								</small>

@@ -24,4 +24,5 @@ export interface IConversationList {
 	createdAt: Date;
 	updatedAt: Date;
 	__v: number;
+	unseenMsgCount: number;
 }

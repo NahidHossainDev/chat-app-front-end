@@ -20,6 +20,7 @@ interface Message {
 	createdAt: Date;
 	updatedAt: Date;
 	conversationId: string;
+	isSeen?: boolean;
 	__v: number;
 }
 

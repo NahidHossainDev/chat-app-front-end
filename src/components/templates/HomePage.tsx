@@ -1,10 +1,10 @@
 import { ConversationLists, MessageView } from "@components/organisms";
 import { IMessages } from "@libs/api/interface/messages";
-import { getConversationState } from "@store/conversations";
+import { getConversationState, updateUnseenCount } from "@store/conversations";
 import { getUserState } from "@store/user/user.slice";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 // import { io } from "socket.io-client";
 
@@ -17,31 +17,33 @@ export const HomePage: FC = () => {
 	const [activeUsers, setActiveUsers] = useState<IActiveUsers[]>([]);
 	const user = useSelector(getUserState);
 	const { currentConversaion } = useSelector(getConversationState);
+	const dispatch = useDispatch();
+	const socket = useRef<any>();
 
-	const socket = io(process.env.apiURL);
 	useEffect(() => {
+		socket.current = io(process.env.apiURL);
 		if (user.id) {
 			console.log("nahid1");
-			socket.emit("addToActiveUsers", user.id);
+			socket.current.emit("addToActiveUsers", user.id);
+			socket.current.on("getActiveUsers", (users) => {
+				console.log(socket.current.id);
+
+				console.log({ users });
+				setActiveUsers(users);
+			});
 		}
 	}, [user]);
-
-	useEffect(() => {
-		socket.on("getActiveUsers", (users) => {
-			console.log("nahid2");
-			setActiveUsers(users);
-		});
-	}, []);
 
 	console.log({ currentConversaion }, { user });
 
 	useEffect(() => {
-		socket.on("new_message", (data: IMessages["messages"][0]) => {
-			console.log("nahid3");
+		socket.current.on("new_message", (data: IMessages["messages"][0]) => {
 			console.log({ currentConversaion });
 			console.log("from-socket", data);
 			if (data?.conversationId === currentConversaion?._id) {
 				setMessages((prev) => [...prev, data]);
+			} else {
+				dispatch(updateUnseenCount(data?.conversationId, "ADD"));
 			}
 		});
 	}, []);
