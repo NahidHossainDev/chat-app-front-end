@@ -1,6 +1,6 @@
 import { Button } from "@components/atoms";
 import { IActiveUsers } from "@components/templates/HomePage";
-import { getConversationState, updateCurrentConversation } from "@store/conversations";
+import { getConversationState, updateCurrentConversation, updateUnseenCount } from "@store/conversations";
 import { getUserState } from "@store/user/user.slice";
 import { FC, useState } from "react";
 import { Col } from "react-bootstrap";
@@ -21,8 +21,8 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers }) => {
 			<div className='all-friends-container VerticalScroller'>
 				{allConversations?.length > 0 ? (
 					allConversations.map((el) => {
-						const item = user.id === el.creator.id ? el.participant : el.creator;
-						const isActive = activeUsers?.some((user) => user.userId === item.id);
+						const item = user.id === el?.creator?.id ? el.participant : el.creator;
+						const isActive = activeUsers?.some((user) => user.userId === item?.id);
 
 						return (
 							<ConversationListItem
@@ -31,7 +31,10 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers }) => {
 									currentConversaion?._id === el._id && "active"
 								}`}
 								role='button'
-								onClick={() => dispatch(updateCurrentConversation(el))}
+								onClick={() => {
+									dispatch(updateCurrentConversation(el));
+									dispatch(updateUnseenCount(el._id, "REMOVE"));
+								}}
 							>
 								<p className='mb-0 text-light'>
 									{item.name}{" "}

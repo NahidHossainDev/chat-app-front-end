@@ -1,5 +1,5 @@
 import { IConversationList } from "@libs/api/interface/user";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { AppState } from "@store";
 
 const initialState: IConversationState = {
@@ -12,11 +12,11 @@ export const conversationSlice = createSlice({
 	initialState,
 	reducers: {
 		updateAllConversation: (state, action: PayloadAction<IConversationList[]>) => {
-			return { ...state, allConversations: action.payload };
+			state.allConversations = action.payload;
 		},
 
 		updateCurrentConversation: (state, action: PayloadAction<IConversationList>) => {
-			return { ...state, currentConversaion: action.payload };
+			state.currentConversaion = action.payload;
 		},
 		updateUnseenCount: {
 			prepare(convId: string, type: "ADD" | "REMOVE") {
@@ -25,10 +25,14 @@ export const conversationSlice = createSlice({
 			reducer(state, action: PayloadAction<IUpdateUnseenPayload>) {
 				const { convId, type } = action.payload;
 				// adding or removing unseenMsgCount by TYPE
-				const newConvArr = state.allConversations.map(
-					(el) => el._id === convId && { ...el, unseenMsgCount: type === "ADD" ? el.unseenMsgCount + 1 : 0 }
-				);
-				return { ...state, allConversations: newConvArr };
+				state.allConversations.forEach((el) => {
+					if (el._id === convId)
+						el.unseenMsgCount =
+							type === "ADD" ? el.unseenMsgCount + 1 : type === "REMOVE" ? 0 : el.unseenMsgCount;
+				});
+				console.log(current(state));
+
+				// return { ...state, allConversations: newConvArr };
 			},
 		},
 	},

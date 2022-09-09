@@ -6,15 +6,10 @@ import { FC, useEffect, useRef, useState } from "react";
 import { Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
-// import { io } from "socket.io-client";
-
-// const ENDPOINT = "localhost:5000";
-// const socket = io(ENDPOINT);
-
 export const HomePage: FC = () => {
-	// const [currentConversaion, setActiveConv] = useState<IConversationList>(null);
 	const [messages, setMessages] = useState<IMessages["messages"]>([]);
 	const [activeUsers, setActiveUsers] = useState<IActiveUsers[]>([]);
+	const [newMsg, setNewMsg] = useState<IMessages["messages"][0]>(null);
 	const user = useSelector(getUserState);
 	const { currentConversaion } = useSelector(getConversationState);
 	const dispatch = useDispatch();
@@ -23,30 +18,28 @@ export const HomePage: FC = () => {
 	useEffect(() => {
 		socket.current = io(process.env.apiURL);
 		if (user.id) {
-			console.log("nahid1");
 			socket.current.emit("addToActiveUsers", user.id);
 			socket.current.on("getActiveUsers", (users) => {
-				console.log(socket.current.id);
-
-				console.log({ users });
 				setActiveUsers(users);
 			});
 		}
 	}, [user]);
 
-	console.log({ currentConversaion }, { user });
-
 	useEffect(() => {
 		socket.current.on("new_message", (data: IMessages["messages"][0]) => {
-			console.log({ currentConversaion });
-			console.log("from-socket", data);
-			if (data?.conversationId === currentConversaion?._id) {
-				setMessages((prev) => [...prev, data]);
-			} else {
-				dispatch(updateUnseenCount(data?.conversationId, "ADD"));
-			}
+			setNewMsg(data);
 		});
-	}, []);
+	}, [socket, user?.id]);
+
+	useEffect(() => {
+		if (newMsg) {
+			if (newMsg?.conversationId === currentConversaion?._id) {
+				setMessages((prev) => [...prev, newMsg]);
+			} else {
+				dispatch(updateUnseenCount(newMsg?.conversationId, "ADD"));
+			}
+		}
+	}, [newMsg]);
 
 	return (
 		<Row className='h-100vh'>

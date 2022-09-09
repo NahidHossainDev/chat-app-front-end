@@ -6,7 +6,7 @@ const nextConfig = {
 		apiURL: process.env.API_URL,
 	},
 
-	reactStrictMode: true,
+	reactStrictMode: false,
 	compiler: {
 		styledComponents: true,
 	},
