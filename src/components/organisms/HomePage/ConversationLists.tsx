@@ -18,7 +18,8 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers }) => {
 	return (
 		<Wrapper xs={3} className='h-100'>
 			<ConversationHeader name={user.name} mobile={user.mobile} />
-			<div className='all-friends-container VerticalScroller'>
+
+			<div className='VerticalScroller'>
 				{allConversations?.length > 0 ? (
 					allConversations.map((el) => {
 						const item = user.id === el?.creator?.id ? el.participant : el.creator;
@@ -36,14 +37,17 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers }) => {
 									dispatch(updateUnseenCount(el._id, "REMOVE"));
 								}}
 							>
-								<p className='mb-0 text-light'>
-									{item.name}{" "}
-									{el?.unseenMsgCount > 0 && (
-										<span className='bg-danger pill'>{el?.unseenMsgCount}</span>
+								<p className='mb-0 text-light d-flex align-items-center'>
+									{item.name}
+									{user.id !== el?.lastSenderId && el?.unseenMsgCount > 0 && (
+										<small className='count'>
+											{el?.unseenMsgCount < 10 ? el?.unseenMsgCount : "9+"}
+										</small>
 									)}
 								</p>
-								<small className='text-secondary'>
-									{item?.mobile} <span className='text-success'> {isActive ? "(Active)" : ""}</span>
+								<small className='text-secondary d-flex'>
+									{item?.mobile}
+									<span className='text-primary2 ms-auto'> {isActive ? "(Active)" : ""}</span>
 								</small>
 							</ConversationListItem>
 						);
@@ -70,20 +74,36 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers }) => {
 };
 
 interface PropsType {
-	// activeConv: IConversationList;
 	activeUsers: IActiveUsers[];
-	// setActiveConv: Dispatch<SetStateAction<IConversationList>>;
 }
 
 const Wrapper = styled(Col)`
-	.all-friends-container {
-		height: calc(100vh - 80px);
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	max-height: 100vh;
+
+	.VerticalScroller {
+		height: 100%;
+		overflow-y: auto;
+		margin: 1rem 0;
 	}
+
 	.create-new-chat {
 		background-color: #016956;
-		padding: 0.75rem;
+		padding: 0.5rem;
 		border-radius: 0.4rem;
 		text-align: center;
+		margin-top: auto;
+		margin-bottom: 0.6rem;
+	}
+
+	.count {
+		padding: 0 0.2rem;
+		border-radius: 7px;
+		background-color: var(--bs-danger);
+		margin-left: auto;
+		font-size: 12px;
 	}
 `;
 

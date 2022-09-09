@@ -36,6 +36,8 @@ class All_API extends BaseAPI {
 	getMessages = (id: string) => this.get<BR<IMessages>>(`inbox/messages/${id}`);
 
 	sendMessage = (payload: object) => this.post<BR<IMessages["messages"][0]>>("inbox/sendMessage", payload);
+
+	updateSeenUnseen = (payload: object) => this.post<BR<any>>("inbox/updateSeenUnseen", payload);
 }
 
 export const all_API = new All_API(process.env.apiURL);

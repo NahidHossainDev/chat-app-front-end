@@ -13,5 +13,5 @@ export interface IconProps extends SVGAttributes<SVGElement> {
 Icon.defaultProps = {
 	width: 24,
 	height: 24,
-	fill: "var(--bs-light-gray)",
+	fill: "var(--bs-light)",
 };

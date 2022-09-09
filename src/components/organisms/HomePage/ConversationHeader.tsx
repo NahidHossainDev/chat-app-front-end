@@ -15,7 +15,15 @@ export const ConversationHeader: FC<PropsType> = ({ name, mobile }) => {
 					<small className='text-secondary'>{mobile}</small>
 				</div>
 				<span role='button' className='ms-auto'>
-					<IconDropdown variant='primary' path={riSettings} height={18} width={18}>
+					<IconDropdown
+						alignRight
+						variant='primary'
+						style={{ background: "transparent", border: "none" }}
+						path={riSettings}
+						fill='#ffffff'
+						height={20}
+						width={20}
+					>
 						<DropdownItem
 							type='button'
 							onClick={async () => {
@@ -41,7 +49,5 @@ const Wrapper = styled.div`
 	background-color: #29363d;
 	margin: 0 calc(var(--bs-gutter-x) * -0.5);
 	padding: calc(var(--bs-gutter-x) * 0.5);
-	border-bottom: 1px solid var(--bs-secondary);
 	border-right: 1px solid var(--bs-secondary);
-	border-left: 1px solid var(--bs-secondary);
 `;

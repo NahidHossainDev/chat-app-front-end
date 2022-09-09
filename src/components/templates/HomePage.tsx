@@ -1,4 +1,5 @@
 import { ConversationLists, MessageView } from "@components/organisms";
+import { all_API } from "@libs/api/allApi";
 import { IMessages } from "@libs/api/interface/messages";
 import { getConversationState, updateUnseenCount } from "@store/conversations";
 import { getUserState } from "@store/user/user.slice";
@@ -36,10 +37,29 @@ export const HomePage: FC = () => {
 			if (newMsg?.conversationId === currentConversaion?._id) {
 				setMessages((prev) => [...prev, newMsg]);
 			} else {
-				dispatch(updateUnseenCount(newMsg?.conversationId, "ADD"));
+				const payload = {
+					conversationId: newMsg?.conversationId,
+					msgIDs: [],
+				};
+				updateSeenUnSeen(payload, "UNSEEN");
 			}
 		}
 	}, [newMsg]);
+
+	const updateSeenUnSeen = async (data, type: "UNSEEN" | "SEEN") => {
+		const payload = { ...data, type };
+		try {
+			const { success, data, message } = await all_API.updateSeenUnseen(payload);
+			if (success) {
+				dispatch(updateUnseenCount(newMsg?.conversationId, "ADD"));
+				console.log({ data });
+			} else {
+				console.log({ data });
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<Row className='h-100vh'>

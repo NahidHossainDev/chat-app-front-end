@@ -82,11 +82,11 @@ section {
 
 	&::-webkit-scrollbar-track {
 		border-radius: 10px;
-		background-color: #ececec;
+		background-color: transparent;
 	}
 
 	&::-webkit-scrollbar-thumb {
-		background-color: #d6d6d6;
+		background-color: var(--bs-primary);
 		border-radius: 10px;
 	}
 

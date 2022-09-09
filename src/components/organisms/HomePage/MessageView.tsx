@@ -2,7 +2,8 @@ import { all_API } from "@libs/api/allApi";
 import { IMessages } from "@libs/api/interface/messages";
 import { IConversationList } from "@libs/api/interface/user";
 import { getUserState } from "@store/user/user.slice";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { scrollToBottom } from "@utils/helpers";
+import { Dispatch, FC, SetStateAction, useEffect, useRef } from "react";
 import { Col } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
@@ -10,8 +11,9 @@ import { ComposeBox } from "./ComposeBox";
 import { ConversationHeader } from "./ConversationHeader";
 
 export const MessageView: FC<PropsType> = ({ activeConv, messages, setMessages }) => {
-	const [count, setCount] = useState(0);
+	// const [lastSeenIndex, setLastSeenIndex] = useState<number>(null);
 	const user = useSelector(getUserState);
+	const lastMsg = useRef(null);
 
 	const sendMessage = async (text: string) => {
 		if (text) {
@@ -26,9 +28,7 @@ export const MessageView: FC<PropsType> = ({ activeConv, messages, setMessages }
 			try {
 				const { success, data, message } = await all_API.sendMessage(payload);
 				if (success) {
-					setCount((prev) => prev + 1);
 					setMessages((prev) => [...prev, data]);
-					console.log(count, "api response");
 					return true;
 				}
 			} catch (err) {
@@ -48,14 +48,44 @@ export const MessageView: FC<PropsType> = ({ activeConv, messages, setMessages }
 		}
 	};
 
+	const updateSeenUnSeen = async (data, type: "UNSEEN" | "SEEN") => {
+		const payload = { ...data, type };
+		try {
+			const { success, data, message } = await all_API.updateSeenUnseen(payload);
+			if (success) {
+				console.log({ data });
+			} else {
+				console.log({ data });
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	useEffect(() => {
 		getMessage();
 	}, [activeConv]);
 
+	useEffect(() => {
+		const unSeenIDs = messages?.filter((el) => {
+			const me = el.sender?.id === user?.id;
+			if (el.isSeen === false && !me) return el._id.toString();
+		});
+
+		if (unSeenIDs.length > 0) {
+			const payload = {
+				conversationId: activeConv?._id,
+				msgIDs: unSeenIDs,
+			};
+			updateSeenUnSeen(payload, "SEEN");
+		}
+		if (lastMsg) scrollToBottom(lastMsg.current);
+	}, [messages]);
+
 	return (
 		<Wrapper xs={9}>
 			{activeConv ? (
-				<>
+				<div className='RightSide'>
 					<ConversationHeader
 						name={
 							activeConv?.creator.id === user.id ? activeConv?.participant.name : activeConv?.creator.name
@@ -66,17 +96,29 @@ export const MessageView: FC<PropsType> = ({ activeConv, messages, setMessages }
 								: activeConv?.creator.mobile
 						}
 					/>
-					<div className='Text_Container'>
-						<div className='w-100 VerticalScroller'>
+					<div className='Text_Container VerticalScroller'>
+						<div className='w-100 '>
 							{messages?.length > 0
 								? messages.map((el, i) => {
 										const me = el.sender?.id === user?.id;
+										let seen = false;
+										if (me && el?.isSeen) {
+											if (messages[i + 1]) {
+												if (messages[i + 1].sender.id === user?.id && !messages[i + 1].isSeen)
+													seen = true;
+											} else {
+												seen = true;
+											}
+										}
+
 										return (
 											<Text key={i} className={`${me ? "text-end" : ""}`}>
 												<span className={`${me ? "me" : "oponent"}-text position-relative `}>
 													<div id={`triangle-top-${me ? "right" : "left"}`}></div>
 													{el.text}
 												</span>
+												{seen && <div className='text-success'>(seen)</div>}
+												<div ref={lastMsg} />
 											</Text>
 										);
 								  })
@@ -84,10 +126,10 @@ export const MessageView: FC<PropsType> = ({ activeConv, messages, setMessages }
 						</div>
 					</div>
 					<ComposeBox sendMessage={sendMessage} />
-				</>
+				</div>
 			) : (
-				<div className='d-flex align-item-center justify-content-center h-100'>
-					<p>Open an conversation to start</p>
+				<div className='d-flex h-100'>
+					<p className='m-auto'> Open an conversation to start</p>
 				</div>
 			)}
 		</Wrapper>
@@ -103,15 +145,25 @@ interface PropsType {
 const Wrapper = styled(Col)`
 	color: white;
 	background-color: #243038;
-	.Text_Container {
-		height: calc(100vh - 85px);
+
+	.RightSide {
 		display: flex;
-		width: 100%;
-		align-items: flex-end;
-		padding: 0 3rem;
-		span {
-			display: inline-block;
-			margin: 0.6rem 0;
+		flex-direction: column;
+		min-height: 100vh;
+		max-height: 100vh;
+
+		.VerticalScroller {
+			height: 100%;
+			overflow-y: auto;
+		}
+		.Text_Container {
+			width: 100%;
+			padding: 0 3rem;
+			margin-bottom: 0.6rem;
+			span {
+				display: inline-block;
+				margin-top: 0.8rem;
+			}
 		}
 	}
 `;

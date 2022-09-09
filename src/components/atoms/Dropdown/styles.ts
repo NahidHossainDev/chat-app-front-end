@@ -14,7 +14,7 @@ export const DropdownList = styled.div<Pick<DropdownProps, "alignRight">>`
 	text-align: left;
 	display: block;
 	background-color: var(--bs-white);
-	border-radius: 0.625rem;
+	border-radius: 0.425rem;
 	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 	z-index: 1000;
 

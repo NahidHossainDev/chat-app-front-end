@@ -21,6 +21,7 @@ export interface IConversationList {
 	participant: ICreatorOrParticipant;
 	_id: string;
 	lastUpdate: Date;
+	lastSenderId?: string;
 	createdAt: Date;
 	updatedAt: Date;
 	__v: number;
