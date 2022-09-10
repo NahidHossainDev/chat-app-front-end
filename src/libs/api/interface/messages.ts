@@ -20,7 +20,7 @@ interface Message {
 	createdAt: Date;
 	updatedAt: Date;
 	conversationId: string;
-	isSeen?: boolean;
+	isSeen: boolean;
 	__v: number;
 }
 
@@ -29,4 +29,10 @@ export interface IMessages {
 	participant: Receiver;
 	userId: string;
 	conversationId: string;
+}
+
+export interface ISeen {
+	conversationId: string;
+	msgIDs: string[];
+	type: "UNSEEN" | "SEEN";
 }

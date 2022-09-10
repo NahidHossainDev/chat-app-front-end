@@ -1,5 +1,5 @@
 import { IConversationList } from "@libs/api/interface/user";
-import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppState } from "@store";
 
 const initialState: IConversationState = {
@@ -30,9 +30,6 @@ export const conversationSlice = createSlice({
 						el.unseenMsgCount =
 							type === "ADD" ? el.unseenMsgCount + 1 : type === "REMOVE" ? 0 : el.unseenMsgCount;
 				});
-				console.log(current(state));
-
-				// return { ...state, allConversations: newConvArr };
 			},
 		},
 	},

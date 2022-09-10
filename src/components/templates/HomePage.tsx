@@ -1,6 +1,6 @@
 import { ConversationLists, MessageView } from "@components/organisms";
 import { all_API } from "@libs/api/allApi";
-import { IMessages } from "@libs/api/interface/messages";
+import { IMessages, ISeen } from "@libs/api/interface/messages";
 import { getConversationState, updateUnseenCount } from "@store/conversations";
 import { getUserState } from "@store/user/user.slice";
 import { FC, useEffect, useRef, useState } from "react";
@@ -11,6 +11,7 @@ export const HomePage: FC = () => {
 	const [messages, setMessages] = useState<IMessages["messages"]>([]);
 	const [activeUsers, setActiveUsers] = useState<IActiveUsers[]>([]);
 	const [newMsg, setNewMsg] = useState<IMessages["messages"][0]>(null);
+	const [seenData, setSeenData] = useState<ISeen>(null);
 	const user = useSelector(getUserState);
 	const { currentConversaion } = useSelector(getConversationState);
 	const dispatch = useDispatch();
@@ -33,6 +34,26 @@ export const HomePage: FC = () => {
 	}, [socket, user?.id]);
 
 	useEffect(() => {
+		socket.current.on("msg_seen", (data: ISeen) => {
+			setSeenData(data);
+		});
+	}, [socket, user?.id]);
+
+	useEffect(() => {
+		if (seenData) {
+			setMessages((prevSt) => {
+				let arr = [...prevSt];
+				seenData.msgIDs.forEach((element) => {
+					arr.forEach((el, i) => {
+						if (element === el._id) arr[i].isSeen = true;
+					});
+				});
+				return arr;
+			});
+		}
+	}, [seenData]);
+
+	useEffect(() => {
 		if (newMsg) {
 			if (newMsg?.conversationId === currentConversaion?._id) {
 				setMessages((prev) => [...prev, newMsg]);
@@ -52,9 +73,8 @@ export const HomePage: FC = () => {
 			const { success, data, message } = await all_API.updateSeenUnseen(payload);
 			if (success) {
 				dispatch(updateUnseenCount(newMsg?.conversationId, "ADD"));
-				console.log({ data });
 			} else {
-				console.log({ data });
+				console.log(data);
 			}
 		} catch (error) {
 			console.log(error);

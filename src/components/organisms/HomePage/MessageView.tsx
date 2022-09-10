@@ -53,9 +53,15 @@ export const MessageView: FC<PropsType> = ({ activeConv, messages, setMessages }
 		try {
 			const { success, data, message } = await all_API.updateSeenUnseen(payload);
 			if (success) {
-				console.log({ data });
-			} else {
-				console.log({ data });
+				setMessages((prevSt) => {
+					let arr = prevSt;
+					data.msgIDs.forEach((element) => {
+						arr.forEach((el, i) => {
+							if (element === el._id) arr[i].isSeen = true;
+						});
+					});
+					return arr;
+				});
 			}
 		} catch (error) {
 			console.log(error);
@@ -67,11 +73,11 @@ export const MessageView: FC<PropsType> = ({ activeConv, messages, setMessages }
 	}, [activeConv]);
 
 	useEffect(() => {
-		const unSeenIDs = messages?.filter((el) => {
+		const unSeenIDs = [];
+		messages?.filter((el) => {
 			const me = el.sender?.id === user?.id;
-			if (el.isSeen === false && !me) return el._id.toString();
+			if (el.isSeen === false && !me) unSeenIDs.push(el._id.toString());
 		});
-
 		if (unSeenIDs.length > 0) {
 			const payload = {
 				conversationId: activeConv?._id,
@@ -80,7 +86,7 @@ export const MessageView: FC<PropsType> = ({ activeConv, messages, setMessages }
 			updateSeenUnSeen(payload, "SEEN");
 		}
 		if (lastMsg) scrollToBottom(lastMsg.current);
-	}, [messages]);
+	}, [messages.length]);
 
 	return (
 		<Wrapper xs={9}>

@@ -1,7 +1,7 @@
 import { NextPageContext } from "next";
 import { BaseAPI } from "./baseAPI";
 import { BR, IAuth, ICreateAcc } from "./interface";
-import { IMessages } from "./interface/messages";
+import { IMessages, ISeen } from "./interface/messages";
 import { IConversationList, ISearchUserData } from "./interface/user";
 
 class All_API extends BaseAPI {
@@ -37,7 +37,7 @@ class All_API extends BaseAPI {
 
 	sendMessage = (payload: object) => this.post<BR<IMessages["messages"][0]>>("inbox/sendMessage", payload);
 
-	updateSeenUnseen = (payload: object) => this.post<BR<any>>("inbox/updateSeenUnseen", payload);
+	updateSeenUnseen = (payload: ISeen) => this.post<BR<ISeen>>("inbox/updateSeenUnseen", payload);
 }
 
 export const all_API = new All_API(process.env.apiURL);
