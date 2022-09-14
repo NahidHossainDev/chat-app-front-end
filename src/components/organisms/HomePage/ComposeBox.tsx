@@ -41,7 +41,7 @@ interface PropsType {
 
 const Wrapper = styled.footer`
 	background-color: #30434e;
-	padding: 20px;
+	padding: 0.7rem;
 	display: grid;
 	grid-template-columns: 1.5rem auto 1.5rem;
 	grid-column-gap: 1rem;
@@ -49,8 +49,8 @@ const Wrapper = styled.footer`
 	textarea {
 		background-color: #2a3942;
 		border: none;
-		padding: 10px 20px;
-		border-radius: 10px;
+		padding: 0.5rem 0.7rem;
+		border-radius: 0.4rem;
 		min-width: 50%;
 		color: white;
 	}

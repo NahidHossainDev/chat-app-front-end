@@ -50,4 +50,9 @@ const Wrapper = styled.div`
 	margin: 0 calc(var(--bs-gutter-x) * -0.5);
 	padding: calc(var(--bs-gutter-x) * 0.5);
 	border-right: 1px solid var(--bs-secondary);
+
+	@media only screen and (max-width: 525.9px) {
+		padding: 1rem;
+		padding-right: 0;
+	}
 `;

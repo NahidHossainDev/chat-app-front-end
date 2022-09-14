@@ -2,15 +2,15 @@ import { FC } from "react";
 import { Container } from "react-bootstrap";
 
 export const MainLayout: FC<PropsType> = ({ children }) => {
-    return (
-        <Container>
-            <main>{children}</main>
-        </Container>
-    );
+	return (
+		<Container fluid='xl'>
+			<main>{children}</main>
+		</Container>
+	);
 };
 
 interface PropsType {
-    isMobile?: boolean;
-    authUser?: any;
-    children?: React.ReactNode;
+	isMobile?: boolean;
+	authUser?: any;
+	children?: React.ReactNode;
 }

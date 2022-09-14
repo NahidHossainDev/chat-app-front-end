@@ -9,14 +9,14 @@ import styled from "styled-components";
 import { ConversationHeader } from "./ConversationHeader";
 import { SearchModal } from "./SearchModal";
 
-export const ConversationLists: FC<PropsType> = ({ activeUsers }) => {
+export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView = false }) => {
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const user = useSelector(getUserState);
 	const { currentConversaion, allConversations } = useSelector(getConversationState);
 	const dispatch = useDispatch();
 
 	return (
-		<Wrapper xs={3} className='h-100'>
+		<Wrapper md={3} sm={4} xs={isMobileView ? 12 : 5} className='h-100'>
 			<ConversationHeader name={user.name} mobile={user.mobile} />
 
 			<div className='VerticalScroller'>
@@ -28,7 +28,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers }) => {
 						return (
 							<ConversationListItem
 								key={el?._id}
-								className={`px-3 py-1 border-bottom border-secondary ${
+								className={`ps-2 py-1 border-bottom border-secondary ${
 									currentConversaion?._id === el._id && "active"
 								}`}
 								role='button'
@@ -47,7 +47,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers }) => {
 								</p>
 								<small className='text-secondary d-flex'>
 									{item?.mobile}
-									<span className='text-primary2 ms-auto'> {isActive ? "(Active)" : ""}</span>
+									<span className={`text-primary2 ms-auto ${isActive ? "active-user" : ""}`} />
 								</small>
 							</ConversationListItem>
 						);
@@ -75,6 +75,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers }) => {
 
 interface PropsType {
 	activeUsers: IActiveUsers[];
+	isMobileView?: boolean;
 }
 
 const Wrapper = styled(Col)`
@@ -108,6 +109,12 @@ const Wrapper = styled(Col)`
 `;
 
 const ConversationListItem = styled.div`
+	.active-user {
+		height: 0.7rem;
+		width: 0.7rem;
+		border-radius: 50%;
+		background-color: green;
+	}
 	&.active {
 		background-color: #29363d;
 	}
