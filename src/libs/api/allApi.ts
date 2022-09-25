@@ -25,7 +25,7 @@ class All_API extends BaseAPI {
 	 */
 	validateAuth = (ctx: NextPageContext) => this.get<BR<IAuth>>("validate-auth", ctx);
 
-	authRegister = (payload: object) => this.post<BR<ICreateAcc>>("users/create-account", payload);
+	authRegister = (payload: FormData) => this.formData<BR<ICreateAcc>>("users/create-account", payload);
 
 	searchUser = (payload: object) => this.post<BR<ISearchUserData>>("users/searchUser", payload);
 

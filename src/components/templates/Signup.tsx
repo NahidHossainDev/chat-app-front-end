@@ -1,38 +1,40 @@
 import { FormInput } from "@components/atoms";
 import { all_API } from "@libs/api/allApi";
+import { isEmail, isNotEmpty, isPhoneNumber, passValidation, useNewForm } from "@libs/hooks";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent, FC, useState } from "react";
+import { FC, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import styled from "styled-components";
 
 export const Signup: FC = () => {
-	const initailValues = { files: null, name: "", email: "", mobile: "", password: "" };
-	const initailErrors = { files: "", name: "", email: "", mobile: "", password: "" };
-
-	const [values, setValues] = useState<typeof initailErrors>(initailValues);
-	const [errs, setErrs] = useState<typeof initailErrors>(initailErrors);
+	const initailValues = {
+		files: { value: null, message: "", validate: [] },
+		name: { value: "", message: "", validate: [isNotEmpty] },
+		email: { value: "", message: "", validate: [isNotEmpty, isEmail] },
+		mobile: { value: "", message: "", validate: [isNotEmpty, isPhoneNumber] },
+		password: { value: "", message: "", validate: [isNotEmpty, passValidation] },
+	};
+	const [file, setFile] = useState(null);
+	// const initailErrors = { files: "", name: "", email: "", mobile: "", password: "" };
+	// const [errors, seterrors] = useState<typeof initailErrors>(initailErrors);
 
 	const router = useRouter();
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		// const payload = new FormData();
-		// payload.append("name", values.name);
-		// payload.append("email", values.email);
-		// payload.append("password", values.password);
-		// payload.append("mobile", values.mobile);
-		// payload.append("files", values.files);
+	const onSubmitHandler = async () => {
+		const payload = new FormData();
+		payload.append(`file`, file);
+		for (const key in values) {
+			payload.append(`${key}`, values[key]);
+		}
 
 		try {
-			const { success, data, message } = await all_API.authRegister(values);
+			const { success, data, message } = await all_API.authRegister(payload);
 			if (success) {
-				setErrs(initailErrors);
 				router.push(router.query?.redirect ? String(router.query.redirect) : "/login");
 			} else {
-				setErrs(initailErrors);
-				setErrs((prevState) => {
-					const err = initailErrors;
+				setErrors((prevState) => {
+					const err = { ...prevState };
 					for (const key in data?.errors) {
 						err[key] = data?.errors[key].msg;
 					}
@@ -42,17 +44,19 @@ export const Signup: FC = () => {
 		} catch (err) {}
 	};
 
-	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		if (name === "file") {
-			setValues((prevState) => ({ ...prevState, [name]: e.target.files[0] }));
-		} else {
-			setValues((prevState) => ({ ...prevState, [name]: value }));
-		}
-	};
+	// const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+	// 	const { name, value } = e.target;
+	// 	if (name === "file") {
+	// 		setValues((prevState) => ({ ...prevState, [name]: e.target.files[0] }));
+	// 	} else {
+	// 		setValues((prevState) => ({ ...prevState, [name]: value }));
+	// 	}
+	// };
+
+	const { values, errors, handleChange, handleSubmit, setErrors } = useNewForm(initailValues, onSubmitHandler);
 	return (
 		<Wrapper>
-			<Form className=' m-auto p-4 rounded' onSubmit={handleSubmit}>
+			<Form noValidate className=' m-auto p-4 rounded' onSubmit={handleSubmit}>
 				<h5 className='text-center mb-3'>Create a new account</h5>
 				<FormInput
 					srOnly
@@ -61,7 +65,7 @@ export const Signup: FC = () => {
 					placeholder='Full Name'
 					onChange={handleChange}
 					value={values.name}
-					message={errs.name}
+					message={errors.name}
 					required
 				/>
 				<FormInput
@@ -71,7 +75,7 @@ export const Signup: FC = () => {
 					placeholder='Email'
 					onChange={handleChange}
 					value={values.email}
-					message={errs.email}
+					message={errors.email}
 					required
 				/>
 				<FormInput
@@ -81,7 +85,7 @@ export const Signup: FC = () => {
 					placeholder='Mobile number'
 					onChange={handleChange}
 					value={values.mobile}
-					message={errs.mobile}
+					message={errors.mobile}
 					required
 				/>
 				<FormInput
@@ -91,7 +95,7 @@ export const Signup: FC = () => {
 					placeholder='password'
 					onChange={handleChange}
 					value={values.password}
-					message={errs.password}
+					message={errors.password}
 					required
 				/>
 				<FormInput
@@ -99,8 +103,8 @@ export const Signup: FC = () => {
 					type='file'
 					placeholder='Avatar'
 					name='files'
-					onChange={handleChange}
-					message={errs.files}
+					onChange={(e) => setFile(e.target.files[0])}
+					message={errors.files}
 				/>
 
 				<Button variant='primary' className='d-block px-5 mx-auto mb-4' type='submit'>

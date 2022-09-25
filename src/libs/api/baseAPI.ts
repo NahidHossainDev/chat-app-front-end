@@ -68,7 +68,7 @@ export class BaseAPI {
 		return await res.json();
 	}
 
-	protected async image<T>(url: string, payload: FormData, ctx?: NextPageContext): Promise<T> {
+	protected async formData<T>(url: string, payload: FormData, ctx?: NextPageContext): Promise<T> {
 		const res = await fetch(`${this.baseURL}/${url}`, {
 			method: "POST",
 			headers: {
