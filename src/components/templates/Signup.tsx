@@ -16,8 +16,6 @@ export const Signup: FC = () => {
 		password: { value: "", message: "", validate: [isNotEmpty, passValidation] },
 	};
 	const [file, setFile] = useState(null);
-	// const initailErrors = { files: "", name: "", email: "", mobile: "", password: "" };
-	// const [errors, seterrors] = useState<typeof initailErrors>(initailErrors);
 
 	const router = useRouter();
 
@@ -43,15 +41,6 @@ export const Signup: FC = () => {
 			}
 		} catch (err) {}
 	};
-
-	// const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-	// 	const { name, value } = e.target;
-	// 	if (name === "file") {
-	// 		setValues((prevState) => ({ ...prevState, [name]: e.target.files[0] }));
-	// 	} else {
-	// 		setValues((prevState) => ({ ...prevState, [name]: value }));
-	// 	}
-	// };
 
 	const { values, errors, handleChange, handleSubmit, setErrors } = useNewForm(initailValues, onSubmitHandler);
 	return (

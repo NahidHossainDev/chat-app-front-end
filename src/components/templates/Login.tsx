@@ -1,22 +1,23 @@
 import { FormInput } from "@components/atoms";
 import { all_API } from "@libs/api/allApi";
+import { isNotEmpty, useNewForm } from "@libs/hooks";
 import { setAuthUser } from "@store/user/user.action";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent, FC, useState } from "react";
+import { FC } from "react";
 import { Button, Form } from "react-bootstrap";
 import styled from "styled-components";
 
 export const Login: FC = () => {
-	const initialValues = { username: "", password: "" };
-	const initialErrs = { username: "", password: "", common: "" };
-	const [values, setValues] = useState<typeof initialValues>(initialValues);
-	const [errs, setErrs] = useState<typeof initialErrs>(initialErrs);
+	const initailValues = {
+		username: { value: "", message: "", validate: [isNotEmpty] },
+		password: { value: "", message: "", validate: [isNotEmpty] },
+		common: { value: "", message: "" },
+	};
 
 	const router = useRouter();
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const onSubmitHandler = async () => {
 		if (values.password && values.username) {
 			const { password, username } = values;
 			try {
@@ -25,28 +26,20 @@ export const Login: FC = () => {
 					setAuthUser(data);
 					router.push(router.query?.redirect ? String(router.query.redirect) : "/");
 				} else {
-					setErrs(() => {
-						const err = initialErrs;
+					setErrors((preErr) => {
+						const err = { ...preErr };
 						for (const key in data?.errors) {
 							err[key] = data?.errors[key].msg;
 						}
 						return err;
 					});
-					setTimeout(() => {
-						console.log("nahid");
-
-						setErrs((prev) => ({ ...prev, ...initialErrs }));
-					}, 2000);
+					setTimeout(() => setErrors({ common: "", username: "", password: "" }), 3000);
 				}
 			} catch (err) {}
 		}
 	};
-	console.log(errs);
 
-	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setValues((prevState) => ({ ...prevState, [name]: value }));
-	};
+	const { values, errors, handleChange, handleSubmit, setErrors } = useNewForm(initailValues, onSubmitHandler);
 	return (
 		<Wrapper>
 			<Form className=' m-auto p-4 rounded' onSubmit={handleSubmit}>
@@ -61,28 +54,28 @@ export const Login: FC = () => {
 					placeholder='Enter your email or phone number'
 					value={values.username}
 					onChange={handleChange}
-					message={errs.username}
+					message={errors.username}
 					required
 				/>
 
 				<FormInput
 					rounded
 					srOnly
-					className='mb-3'
+					className='mb-2'
 					type='password'
 					name='password'
 					placeholder='Enter your password'
 					value={values.password}
 					onChange={handleChange}
-					message={errs.password}
+					message={errors.password}
 					required
 				/>
-				{errs.common && (
+				{errors.common && (
 					<p className='mb-0 text-danger text-center'>
-						<small>{errs.common}</small>
+						<small>{errors.common}</small>
 					</p>
 				)}
-				<Button variant='primary' type='submit' className='d-block px-5 mx-auto mb-4'>
+				<Button variant='primary' type='submit' className='d-block px-5 mx-auto mb-4 mt-3'>
 					Login
 				</Button>
 				<span className='d-block text-center'>
