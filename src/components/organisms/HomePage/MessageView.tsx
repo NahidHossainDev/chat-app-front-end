@@ -10,8 +10,7 @@ import styled from "styled-components";
 import { ComposeBox } from "./ComposeBox";
 import { ConversationHeader } from "./ConversationHeader";
 
-export const MessageView: FC<PropsType> = ({ messages, setMessages }) => {
-	// const [lastSeenIndex, setLastSeenIndex] = useState<number>(null);
+export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) => {
 	const user = useSelector(getUserState);
 	const { currentConversaion } = useSelector(getConversationState);
 	const lastMsg = useRef(null);
@@ -138,6 +137,7 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages }) => {
 						</div>
 					</div>
 					<ComposeBox sendMessage={sendMessage} />
+					{/* <DragDropFile {...rest} /> */}
 				</div>
 			) : (
 				<div className='d-flex h-100'>
@@ -151,11 +151,14 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages }) => {
 interface PropsType {
 	messages: IMessages["messages"];
 	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
+	dragActive: boolean;
+	setDragActive: Dispatch<SetStateAction<boolean>>;
 }
 
 const Wrapper = styled(Col)`
 	color: white;
 	background-color: #243038;
+	position: relative;
 
 	.RightSide {
 		display: flex;

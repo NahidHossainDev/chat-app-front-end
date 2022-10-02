@@ -36,3 +36,8 @@ export interface ISeen {
 	msgIDs: string[];
 	type: "UNSEEN" | "SEEN";
 }
+
+export interface IFileUpload {
+	filename: string;
+	id: string;
+}

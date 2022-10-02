@@ -1,7 +1,7 @@
 import { NextPageContext } from "next";
 import { BaseAPI } from "./baseAPI";
 import { BR, IAuth, ICreateAcc } from "./interface";
-import { IMessages, ISeen } from "./interface/messages";
+import { IFileUpload, IMessages, ISeen } from "./interface/messages";
 import { IConversationList, ISearchUserData } from "./interface/user";
 
 class All_API extends BaseAPI {
@@ -38,6 +38,10 @@ class All_API extends BaseAPI {
 	sendMessage = (payload: object) => this.post<BR<IMessages["messages"][0]>>("inbox/sendMessage", payload);
 
 	updateSeenUnseen = (payload: ISeen) => this.post<BR<ISeen>>("inbox/updateSeenUnseen", payload);
+
+	uploadFile = (payload: FormData) => this.formData<BR<IFileUpload[]>>("inbox/uploadFile", payload);
+
+	deleteFile = (id: string) => this.delete<BR<string>>(`inbox/deleteFile/${id}`, {});
 }
 
 export const all_API = new All_API(process.env.apiURL);

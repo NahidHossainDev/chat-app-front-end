@@ -15,10 +15,13 @@ export const HomePage: FC = () => {
 	const [newMsg, setNewMsg] = useState<IMessages["messages"][0]>(null);
 	const [seenData, setSeenData] = useState<ISeen>(null);
 	const [showSideBar, setShowSidebar] = useState<boolean>(true);
+	const [dragActive, setDragActive] = useState<boolean>(false);
 	const user = useSelector(getUserState);
 	const { currentConversaion } = useSelector(getConversationState);
 	const dispatch = useDispatch();
 	const socket = useRef<any>();
+
+	const dragParams = { dragActive, setDragActive };
 
 	useEffect(() => {
 		socket.current = io(process.env.apiURL);
@@ -86,8 +89,28 @@ export const HomePage: FC = () => {
 
 	const isMobileView = useWindowSize().width < 525.9;
 
+	const handleDrag = function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		if (e.type === "dragenter" || e.type === "dragover") {
+			console.log("nahid-3");
+			currentConversaion && setDragActive(true);
+		} else if (e.type === "dragleave") {
+			console.log("nahid-4");
+			setDragActive(false);
+		}
+	};
+
+	console.log(dragActive);
+
 	return (
-		<Row className='h-100vh'>
+		<Row
+			className='h-100vh'
+			onDragEnter={handleDrag}
+			onDragLeave={handleDrag}
+			onDragOver={handleDrag}
+			// onDragEnd={handleDrag}
+		>
 			{isMobileView ? (
 				currentConversaion ? (
 					<SideBar
@@ -102,7 +125,7 @@ export const HomePage: FC = () => {
 			) : (
 				<>
 					<ConversationLists activeUsers={activeUsers} />
-					<MessageView messages={messages} setMessages={setMessages} />
+					<MessageView messages={messages} setMessages={setMessages} {...dragParams} />
 				</>
 			)}
 		</Row>
