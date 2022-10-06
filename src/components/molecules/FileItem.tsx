@@ -30,7 +30,7 @@ export const FileItem: FC<PropsType> = ({ fileName, gDriveID, setFiles, loading,
 			<label>{fileNameShortener(fileName, 12)}</label>
 			{gDriveID && !loading ? (
 				isMessageView ? (
-					<a href={`https://drive.google.com/uc?export=download&id=${gDriveID}`}>
+					<a href={`${process.env.G_DRIVE_LINK}?export=download&id=${gDriveID}`}>
 						<Icon path={downloadCloud} width={20} height={20} />
 					</a>
 				) : (
