@@ -1,146 +1,61 @@
-import { getConversationState } from "@store/conversations";
-import { Dispatch, FC, SetStateAction, useRef } from "react";
-import { useSelector } from "react-redux";
+import { Dispatch, FC, SetStateAction } from "react";
 import styled, { css } from "styled-components";
 
-export const DragDropFile: FC<PropsType> = ({ dragActive, setDragActive }) => {
-	// drag state
-
-	// ref
-	const inputRef = useRef(null);
-
-	// handle drag events
-
-	// triggers when file is dropped
+export const DragDropFile: FC<PropsType> = ({ dragActive, setDragActive, handleDrag, handleOnChange }) => {
 	const handleDrop = function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		setDragActive(false);
+		setDragActive(0);
 
-		const { files } = e.dataTransfer;
-		if (files && files[0]) {
-			// handleFiles(e.dataTransfer.files);
-			console.log(files[0]);
-		}
-	};
-
-	// triggers when file is selected with click
-	const handleChange = function (e) {
-		e.preventDefault();
-		if (e.target.files && e.target.files[0]) {
-			// handleFiles(e.target.files);
-		}
-	};
-
-	// triggers the input when the button is clicked
-	const onButtonClick = () => {
-		inputRef.current.click();
-	};
-	const { currentConversaion } = useSelector(getConversationState);
-
-	const handleDrag = function (e) {
-		e.preventDefault();
-		// e.stopPropagation();
-		if (e.type === "dragenter" || e.type === "dragover") {
-			console.log("nahid-1");
-
-			currentConversaion && setDragActive(true);
-		} else if (e.type === "dragleave") {
-			console.log("nahid-2");
-
-			setDragActive(false);
+		const { files: f } = e.dataTransfer;
+		if (f && f[0]) {
+			const e = {
+				target: {
+					files: f,
+				},
+			};
+			handleOnChange(e);
 		}
 	};
 
 	return (
 		<FromWrapper
-			dragStart={dragActive}
+			dragStart={dragActive > 0}
 			id='form-file-upload'
 			onDragEnter={handleDrag}
-			onSubmit={(e) => e.preventDefault()}
+			onDragOver={handleDrag}
+			onDrop={handleDrop}
 		>
-			<input ref={inputRef} type='file' id='input-file-upload' multiple={true} onChange={handleChange} />
-			<label id='label-file-upload' htmlFor='input-file-upload' className={dragActive ? "drag-active" : ""}>
-				<div>
-					<p>Drag and drop your file here or</p>
-					<button className='upload-button' onClick={onButtonClick}>
-						Upload a file
-					</button>
-				</div>
-			</label>
-			{dragActive && (
-				<div
-					id='drag-file-element'
-					// onDragEnter={handleDrag}
-					// onDragLeave={handleDrag}
-					// onDragOver={handleDrag}
-					// onDrop={handleDrop}
-				></div>
-			)}
+			{dragActive > 0 && <h4 className='text-secondary'>Drop your file here...</h4>}
 		</FromWrapper>
 	);
 };
 
 interface PropsType {
-	dragActive: boolean;
-	setDragActive: Dispatch<SetStateAction<boolean>>;
+	dragActive: number;
+	setDragActive: Dispatch<SetStateAction<number>>;
+	handleDrag: (e) => void;
+	handleOnChange: (e) => Promise<void>;
 }
 
-const FromWrapper = styled.form<{ dragStart: boolean }>`
+const FromWrapper = styled.div<{ dragStart: boolean }>`
 	height: 0;
-	width: 100%;
+	display: none;
+	width: calc(100% - 15px);
 	max-width: 100%;
 	text-align: center;
 	position: absolute;
 	bottom: 0;
+	background-color: #26363f;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-	/* ${({ dragStart }) =>
+	${({ dragStart }) =>
 		dragStart &&
 		css`
 			height: 100vh;
-			transition: 0.3s;
-		`} */
-
-	#input-file-upload {
-		display: none;
-	}
-
-	#label-file-upload {
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-width: 2px;
-		border-style: dashed;
-		border-color: #cbd5e1;
-		background-color: #f8fafc;
-	}
-
-	#label-file-upload.drag-active {
-		background-color: #ffffff;
-	}
-
-	.upload-button {
-		cursor: pointer;
-		padding: 0.25rem;
-		font-size: 1rem;
-		border: none;
-		font-family: "Oswald", sans-serif;
-		background-color: transparent;
-	}
-
-	.upload-button:hover {
-		text-decoration-line: underline;
-	}
-
-	#drag-file-element {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		border-radius: 1rem;
-		top: 0px;
-		right: 0px;
-		bottom: 0px;
-		left: 0px;
-	}
+			border: 2px dashed #cbd5e1;
+			transition: 0.4s;
+		`}
 `;

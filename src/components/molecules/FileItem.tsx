@@ -1,26 +1,43 @@
 import { FileState } from "@components/organisms/HomePage/ComposeBox";
 import { all_API } from "@libs/api/allApi";
-import Icon, { closeCircleFill } from "@libs/icons";
+import Icon, { closeCircleFill, downloadCloud } from "@libs/icons";
 import { fileNameShortener } from "@utils/helpers";
 import { Dispatch, FC, SetStateAction } from "react";
 import { Spinner } from "react-bootstrap";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 
-export const FileItem: FC<PropsType> = ({ file, id, gDriveID, setFiles }) => {
+export const FileItem: FC<PropsType> = ({ fileName, gDriveID, setFiles, loading, setLoading, isMessageView }) => {
 	const handleDeleteFile = async () => {
+		setLoading(true);
 		if (gDriveID) {
-			const { success } = await all_API.deleteFile(gDriveID);
-			if (success) setFiles((prevStat) => prevStat.filter((el) => el.id !== id));
+			try {
+				const { success, message } = await all_API.deleteFile(gDriveID);
+				if (success) {
+					setFiles((prevStat) => prevStat.filter((el) => el.fileName !== fileName));
+				} else {
+					message && toast.error(message);
+				}
+			} catch (error) {
+			} finally {
+				setLoading(false);
+			}
 		}
 	};
 
 	return (
 		<Wrapper>
-			<label>{fileNameShortener(file.name, 12)}</label>
-			{gDriveID ? (
-				<span role='button' className='cross-icon' onClick={handleDeleteFile}>
-					<Icon path={closeCircleFill} width={20} height={20} />
-				</span>
+			<label>{fileNameShortener(fileName, 12)}</label>
+			{gDriveID && !loading ? (
+				isMessageView ? (
+					<a href={`https://drive.google.com/uc?export=download&id=${gDriveID}`}>
+						<Icon path={downloadCloud} width={20} height={20} />
+					</a>
+				) : (
+					<span role='button' className='cross-icon' onClick={handleDeleteFile}>
+						<Icon path={closeCircleFill} width={20} height={20} />
+					</span>
+				)
 			) : (
 				<Spinner animation='border' />
 			)}
@@ -29,7 +46,10 @@ export const FileItem: FC<PropsType> = ({ file, id, gDriveID, setFiles }) => {
 };
 
 interface PropsType extends FileState {
-	setFiles: Dispatch<SetStateAction<FileState[]>>;
+	isMessageView?: boolean;
+	loading?: boolean;
+	setLoading?: Dispatch<SetStateAction<boolean>>;
+	setFiles?: Dispatch<SetStateAction<FileState[]>>;
 }
 
 const Wrapper = styled.div`

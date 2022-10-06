@@ -15,13 +15,12 @@ export const HomePage: FC = () => {
 	const [newMsg, setNewMsg] = useState<IMessages["messages"][0]>(null);
 	const [seenData, setSeenData] = useState<ISeen>(null);
 	const [showSideBar, setShowSidebar] = useState<boolean>(true);
-	const [dragActive, setDragActive] = useState<boolean>(false);
+	const [dragActive, setDragActive] = useState<number>(0);
+	// const [dragCount, setDragCount] = useState<number>(0);
 	const user = useSelector(getUserState);
 	const { currentConversaion } = useSelector(getConversationState);
 	const dispatch = useDispatch();
 	const socket = useRef<any>();
-
-	const dragParams = { dragActive, setDragActive };
 
 	useEffect(() => {
 		socket.current = io(process.env.apiURL);
@@ -92,24 +91,22 @@ export const HomePage: FC = () => {
 	const handleDrag = function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		if (e.type === "dragenter" || e.type === "dragover") {
-			console.log("nahid-3");
-			currentConversaion && setDragActive(true);
-		} else if (e.type === "dragleave") {
-			console.log("nahid-4");
-			setDragActive(false);
+		if (e.type === "dragenter") {
+			!!currentConversaion && setDragActive((pre) => ++pre);
+		} else if (e.type === "dragleave" || e.type === "dragend") {
+			!!currentConversaion && setDragActive((pre) => --pre);
 		}
 	};
 
-	console.log(dragActive);
-
+	const dragParams = { dragActive, setDragActive, handleDrag };
 	return (
 		<Row
 			className='h-100vh'
 			onDragEnter={handleDrag}
-			onDragLeave={handleDrag}
 			onDragOver={handleDrag}
-			// onDragEnd={handleDrag}
+			onDragLeave={handleDrag}
+			onDragEnd={handleDrag}
+			onDrop={() => setDragActive(0)}
 		>
 			{isMobileView ? (
 				currentConversaion ? (

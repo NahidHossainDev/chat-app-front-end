@@ -15,31 +15,6 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 	const { currentConversaion } = useSelector(getConversationState);
 	const lastMsg = useRef(null);
 
-	const sendMessage = async (text: string) => {
-		if (text) {
-			const reciver =
-				currentConversaion?.creator?.id === user?.id
-					? currentConversaion.participant
-					: currentConversaion?.creator;
-			const payload = {
-				conversationId: currentConversaion?._id,
-				message: text,
-				receiverId: reciver?.id,
-				receiverName: reciver?.name,
-				avatar: reciver?.avatar,
-			};
-			try {
-				const { success, data, message } = await all_API.sendMessage(payload);
-				if (success) {
-					setMessages((prev) => [...prev, data]);
-					return true;
-				}
-			} catch (err) {
-				return false;
-			}
-		}
-	};
-
 	const getMessage = async () => {
 		if (currentConversaion?._id) {
 			try {
@@ -107,7 +82,7 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 								: currentConversaion?.creator.mobile
 						}
 					/>
-					<div className='Text_Container VerticalScroller'>
+					<div className='Text_Container VerticalScroller' onClick={(e) => e.preventDefault()}>
 						<div className='w-100 '>
 							{messages?.length > 0
 								? messages.map((el, i) => {
@@ -136,8 +111,8 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 								: null}
 						</div>
 					</div>
-					<ComposeBox sendMessage={sendMessage} />
-					{/* <DragDropFile {...rest} /> */}
+
+					<ComposeBox setMessages={setMessages} {...rest} />
 				</div>
 			) : (
 				<div className='d-flex h-100'>
@@ -151,8 +126,9 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 interface PropsType {
 	messages: IMessages["messages"];
 	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
-	dragActive: boolean;
-	setDragActive: Dispatch<SetStateAction<boolean>>;
+	dragActive: number;
+	setDragActive: Dispatch<SetStateAction<number>>;
+	handleDrag: (e) => void;
 }
 
 const Wrapper = styled(Col)`

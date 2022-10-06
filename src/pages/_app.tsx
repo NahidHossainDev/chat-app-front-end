@@ -8,6 +8,8 @@ import { parseCookies } from "nookies";
 import NProgress from "nprogress";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../../public/scss/app.scss";
 import { all_API } from "../libs/api/allApi";
 
@@ -28,7 +30,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 		}
 		dispatch(updateIsMobile(pageProps?.isMobile));
 	}, []);
-	return <Component {...pageProps} />;
+	return (
+		<>
+			<Component {...pageProps} />
+			<ToastContainer position='bottom-right' autoClose={4000} />
+		</>
+	);
 }
 
 MyApp.getInitialProps = async (appContext: ICustomNextAppContext) => {

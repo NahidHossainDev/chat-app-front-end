@@ -32,7 +32,8 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView = f
 									currentConversaion?._id === el._id && "active"
 								}`}
 								role='button'
-								onClick={() => {
+								onClick={(e) => {
+									e.preventDefault();
 									dispatch(updateCurrentConversation(el));
 									dispatch(updateUnseenCount(el._id, "REMOVE"));
 								}}
