@@ -1,20 +1,30 @@
 import { DropdownItem } from "@components/atoms";
 import { IconDropdown } from "@components/molecules";
-import { riSettings } from "@libs/icons";
+import { useWindowSize } from "@libs/hooks/useWindowSize";
+import Icon, { arrowLeft, riSettings } from "@libs/icons";
 import { revokeAuthUser } from "@store/user/user.action";
 import Router from "next/router";
 import { FC } from "react";
 import styled from "styled-components";
 
 export const ConversationHeader: FC<PropsType> = ({ name, mobile }) => {
+	const isMobileView = useWindowSize().width < 525.9;
+
 	return (
 		<Wrapper>
-			<div className='d-flex align-items-center'>
-				<div>
+			<div className={`d-flex ${isMobileView ? "justify-content-between" : "align-item-center"}`}>
+				{isMobileView && (
+					<div className='d-flex align-items-center'>
+						<span>
+							<Icon path={arrowLeft} />
+						</span>
+					</div>
+				)}
+				<div className='user'>
 					<p className='mb-0 text-light'>{name}</p>
 					<small className='text-secondary'>{mobile}</small>
 				</div>
-				<span role='button' className='ms-auto'>
+				<span role='button' className={!isMobileView && "ms-auto"}>
 					<IconDropdown
 						alignRight
 						variant='primary'

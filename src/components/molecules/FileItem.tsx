@@ -1,7 +1,8 @@
-import { FileState } from "@components/organisms/HomePage/ComposeBox";
 import { all_API } from "@libs/api/allApi";
+import { FileState } from "@libs/api/interface/messages";
 import Icon, { closeCircleFill, downloadCloud } from "@libs/icons";
 import { fileNameShortener } from "@utils/helpers";
+import { useRouter } from "next/router";
 import { Dispatch, FC, SetStateAction } from "react";
 import { Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -25,19 +26,18 @@ export const FileItem: FC<PropsType> = ({ fileName, gDriveID, setFiles, loading,
 		}
 	};
 
+	const router = useRouter();
+	const handleDownload = () => {
+		router.push(`${process.env.gDriveLink}?export=download&id=${gDriveID}`);
+	};
+
 	return (
 		<Wrapper>
 			<label>{fileNameShortener(fileName, 12)}</label>
 			{gDriveID && !loading ? (
-				isMessageView ? (
-					<a href={`${process.env.G_DRIVE_LINK}?export=download&id=${gDriveID}`}>
-						<Icon path={downloadCloud} width={20} height={20} />
-					</a>
-				) : (
-					<span role='button' className='cross-icon' onClick={handleDeleteFile}>
-						<Icon path={closeCircleFill} width={20} height={20} />
-					</span>
-				)
+				<span role='button' className='ms-auto' onClick={isMessageView ? handleDownload : handleDeleteFile}>
+					<Icon path={isMessageView ? downloadCloud : closeCircleFill} width={20} height={20} />
+				</span>
 			) : (
 				<Spinner animation='border' />
 			)}
@@ -53,25 +53,20 @@ interface PropsType extends FileState {
 }
 
 const Wrapper = styled.div`
-	padding: 0.3rem 0.2rem 0rem 0.3rem;
+	padding: 0.3rem;
 	margin-right: 0.3rem;
 	margin-top: 0.3rem;
 	font-size: 0.825rem;
 	border: 1px solid gray;
 	border-radius: 0.3rem;
-	display: inline-block;
+	display: flex;
 	background-color: gray;
 	position: relative;
+	width: 140px;
 	label {
-		width: 125px;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-	}
-	.cross-icon {
-		position: absolute;
-		top: 0;
-		right: 0;
 	}
 	.spinner-border {
 		height: 1rem;

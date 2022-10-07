@@ -9,3 +9,10 @@ export const fileNameShortener = (text: string, length: number = 10) => {
 	}
 	return text;
 };
+
+export const nameShortener = (text: string, length: number = 13) => {
+	if (text.length > length) {
+		return `${text.slice(0, length)}...`;
+	}
+	return text;
+};

@@ -1,6 +1,6 @@
 import { FileItem } from "@components/molecules";
 import { all_API } from "@libs/api/allApi";
-import { IMessages } from "@libs/api/interface/messages";
+import { FileState, IMessages } from "@libs/api/interface/messages";
 import Icon, { attachment as attachIcon, planeSend } from "@libs/icons";
 import { getConversationState } from "@store/conversations";
 import { getUserState } from "@store/user/user.slice";
@@ -39,6 +39,7 @@ export const ComposeBox: FC<PropsType> = ({ setMessages, ...rest }) => {
 				if (success) {
 					setMessages((prev) => [...prev, data]);
 					setText("");
+					setAttachment([]);
 				}
 			} catch (err) {
 				return false;
@@ -139,16 +140,13 @@ interface PropsType {
 	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
 }
 
-export interface FileState {
-	fileName: string;
-	gDriveID: string;
-}
 const Wrapper = styled.footer`
 	background-color: #30434e;
 	padding: 0.7rem;
 	display: grid;
 	grid-template-columns: 1.5rem auto 1.5rem;
 	grid-column-gap: 1rem;
+	margin-top: auto;
 
 	.text-box {
 		min-width: 50%;

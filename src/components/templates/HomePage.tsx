@@ -16,7 +16,6 @@ export const HomePage: FC = () => {
 	const [seenData, setSeenData] = useState<ISeen>(null);
 	const [showSideBar, setShowSidebar] = useState<boolean>(true);
 	const [dragActive, setDragActive] = useState<number>(0);
-	// const [dragCount, setDragCount] = useState<number>(0);
 	const user = useSelector(getUserState);
 	const { currentConversaion } = useSelector(getConversationState);
 	const dispatch = useDispatch();
@@ -111,6 +110,7 @@ export const HomePage: FC = () => {
 			{isMobileView ? (
 				currentConversaion ? (
 					<SideBar
+						{...dragParams}
 						show={showSideBar}
 						setShow={setShowSidebar}
 						messages={messages}

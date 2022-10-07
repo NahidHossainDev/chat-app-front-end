@@ -1,7 +1,8 @@
-import { Button } from "@components/atoms";
+import { Avatar, Button } from "@components/atoms";
 import { IActiveUsers } from "@components/templates/HomePage";
 import { getConversationState, updateCurrentConversation, updateUnseenCount } from "@store/conversations";
 import { getUserState } from "@store/user/user.slice";
+import { nameShortener } from "@utils/helpers";
 import { FC, useState } from "react";
 import { Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,7 +29,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView = f
 						return (
 							<ConversationListItem
 								key={el?._id}
-								className={`ps-2 py-1 border-bottom border-secondary ${
+								className={`ps-2 py-1 border-bottom border-secondary d-flex ${
 									currentConversaion?._id === el._id && "active"
 								}`}
 								role='button'
@@ -38,18 +39,25 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView = f
 									dispatch(updateUnseenCount(el._id, "REMOVE"));
 								}}
 							>
-								<p className='mb-0 text-light d-flex align-items-center'>
-									{item.name}
-									{user.id !== el?.lastSenderId && el?.unseenMsgCount > 0 && (
-										<small className='count'>
-											{el?.unseenMsgCount < 10 ? el?.unseenMsgCount : "9+"}
-										</small>
-									)}
-								</p>
-								<small className='text-secondary d-flex'>
-									{item?.mobile}
-									<span className={`text-primary2 ms-auto ${isActive ? "active-user" : ""}`} />
-								</small>
+								{item?.avatar && (
+									<Avatar
+										size='sm'
+										className='me-1'
+										src={`https://drive.google.com/uc?export=view&id=${item?.avatar}`}
+									/>
+								)}
+								<div>
+									<p className='mb-0 text-light d-flex align-items-center'>
+										{nameShortener(item?.name)}
+										{user.id !== el?.lastSenderId && el?.unseenMsgCount > 0 && (
+											<small className='count'>
+												{el?.unseenMsgCount < 10 ? el?.unseenMsgCount : "9+"}
+											</small>
+										)}
+									</p>
+									<small className='text-secondary position-relative'>{item?.mobile}</small>
+								</div>
+								<span className={`text-primary2 ms-auto ${isActive ? "active-user" : ""}`} />
 							</ConversationListItem>
 						);
 					})
@@ -110,11 +118,15 @@ const Wrapper = styled(Col)`
 `;
 
 const ConversationListItem = styled.div`
+	position: relative;
 	.active-user {
 		height: 0.7rem;
 		width: 0.7rem;
 		border-radius: 50%;
 		background-color: green;
+		position: absolute;
+		right: 15px;
+		top: 20px;
 	}
 	&.active {
 		background-color: #29363d;

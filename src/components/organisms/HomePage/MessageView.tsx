@@ -1,3 +1,4 @@
+import { FileItem } from "@components/molecules";
 import { all_API } from "@libs/api/allApi";
 import { IMessages } from "@libs/api/interface/messages";
 import { getConversationState } from "@store/conversations";
@@ -99,9 +100,18 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 
 										return (
 											<Text key={i} className={`${me ? "text-end" : ""}`}>
-												<span className={`${me ? "me" : "oponent"}-text position-relative `}>
+												<span
+													className={` text-viwer ${
+														me ? "me" : "oponent"
+													}-text position-relative `}
+												>
 													<div id={`triangle-top-${me ? "right" : "left"}`}></div>
 													{el.text}
+													<div>
+														{el.attachment?.map((el) => (
+															<FileItem isMessageView {...el} key={el.gDriveID} />
+														))}
+													</div>
 												</span>
 												{seen && <div className='text-success'>(seen)</div>}
 												<div ref={lastMsg} />
@@ -150,7 +160,7 @@ const Wrapper = styled(Col)`
 			width: 100%;
 			padding: 0 1rem;
 			margin-bottom: 0.6rem;
-			span {
+			.text-viwer {
 				display: inline-block;
 				margin-top: 0.8rem;
 			}

@@ -10,12 +10,16 @@ interface Receiver {
 	avatar?: any;
 }
 
+export interface FileState {
+	fileName: string;
+	gDriveID: string;
+}
 interface Message {
 	sender: Sender;
 	receiver: Receiver;
 	_id: string;
 	text: string;
-	attachment?: any;
+	attachment?: FileState[];
 	date_time: Date;
 	createdAt: Date;
 	updatedAt: Date;
