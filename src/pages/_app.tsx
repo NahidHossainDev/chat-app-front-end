@@ -1,5 +1,6 @@
 import store, { wrapper } from "@store";
-import { authSignIn, updateIsMobile } from "@store/user/user.slice";
+import { updateIsMobile } from "@store/app/app.slice";
+import { authSignIn } from "@store/user/user.slice";
 import { isMobileDevice } from "@utils/helpers";
 import type { AppContext, AppProps } from "next/app";
 import App from "next/app";
@@ -52,8 +53,8 @@ MyApp.getInitialProps = async (appContext: ICustomNextAppContext) => {
 			} catch (err) {}
 		}
 	} else if (typeof window !== "undefined") {
-		const { user } = store.getState();
-		ctx.isMobile = user.isMobile;
+		const { user, appState } = store.getState();
+		ctx.isMobile = appState.isMobile;
 		if (user.isAuthenticate) {
 			const data = { ...user, token: cookies.token };
 			ctx.authUser = data;

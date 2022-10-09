@@ -7,7 +7,6 @@ const initialState: IUserState = {
 	email: null,
 	role: null,
 	isAuthenticate: false,
-	isMobile: false,
 };
 
 export const userSlice = createSlice({
@@ -18,10 +17,6 @@ export const userSlice = createSlice({
 			return { ...state, ...action.payload, isAuthenticate: true };
 		},
 
-		updateIsMobile: (state, action: PayloadAction<boolean>) => {
-			state.isMobile = action.payload;
-		},
-
 		authSignOut: (state) => {
 			return { ...initialState };
 		},
@@ -29,7 +24,7 @@ export const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
-export const { authSignIn, authSignOut, updateIsMobile } = userSlice.actions;
+export const { authSignIn, authSignOut } = userSlice.actions;
 export const getUserState = (state) => state.user;
 
 type IUserState = {
@@ -39,5 +34,4 @@ type IUserState = {
 	email: string;
 	role: string;
 	isAuthenticate?: boolean;
-	isMobile?: boolean;
 };

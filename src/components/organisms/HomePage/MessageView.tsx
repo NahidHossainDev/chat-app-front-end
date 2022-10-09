@@ -11,7 +11,7 @@ import styled from "styled-components";
 import { ComposeBox } from "./ComposeBox";
 import { ConversationHeader } from "./ConversationHeader";
 
-export const MessageView: FC<PropsType> = ({ messages, setMessages }) => {
+export const MessageView: FC<PropsType> = ({ messages, setMessages, backArrow }) => {
 	const user = useSelector(getUserState);
 	const { currentConversation } = useSelector(getConversationState);
 	const lastMsg = useRef(null);
@@ -72,6 +72,7 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages }) => {
 			{currentConversation ? (
 				<div className='RightSide'>
 					<ConversationHeader
+						backArrow={backArrow}
 						name={
 							currentConversation?.creator.id === user.id
 								? currentConversation?.participant.name
@@ -136,6 +137,7 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages }) => {
 interface PropsType {
 	messages: IMessages["messages"];
 	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
+	backArrow?: boolean;
 }
 
 const Wrapper = styled(Col)`

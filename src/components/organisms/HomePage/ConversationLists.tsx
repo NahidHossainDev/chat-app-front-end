@@ -1,20 +1,30 @@
 import { Avatar, Button } from "@components/atoms";
 import { IActiveUsers } from "@components/templates/HomePage";
+import { IConversationList } from "@libs/api/interface/user";
+import { getAppState, updateShowSidebar } from "@store/app/app.slice";
 import { getConversationState, updateCurrentConversation, updateUnseenCount } from "@store/conversations.slice";
 import { getUserState } from "@store/user/user.slice";
 import { nameShortener } from "@utils/helpers";
-import { FC, useState } from "react";
+import { FC, MouseEvent, useState } from "react";
 import { Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { ConversationHeader } from "./ConversationHeader";
 import { SearchModal } from "./SearchModal";
 
-export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView = false }) => {
+export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView }) => {
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const user = useSelector(getUserState);
+	const { isMobile } = useSelector(getAppState);
 	const { currentConversation, allConversations } = useSelector(getConversationState);
 	const dispatch = useDispatch();
+
+	const conversationClickHandler = (e: MouseEvent, el: IConversationList) => {
+		e.preventDefault();
+		dispatch(updateCurrentConversation(el));
+		dispatch(updateUnseenCount(el._id, "REMOVE"));
+		isMobile && dispatch(updateShowSidebar(true));
+	};
 
 	return (
 		<Wrapper md={3} sm={4} xs={isMobileView ? 12 : 5} className='h-100'>
@@ -33,11 +43,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView = f
 									currentConversation?._id === el._id && "active"
 								}`}
 								role='button'
-								onClick={(e) => {
-									e.preventDefault();
-									dispatch(updateCurrentConversation(el));
-									dispatch(updateUnseenCount(el._id, "REMOVE"));
-								}}
+								onClick={(e) => conversationClickHandler(e, el)}
 							>
 								{item?.avatar && (
 									<Avatar
@@ -80,6 +86,10 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView = f
 			<SearchModal show={showModal} setShow={setShowModal} />
 		</Wrapper>
 	);
+};
+
+ConversationLists.defaultProps = {
+	isMobileView: false,
 };
 
 interface PropsType {

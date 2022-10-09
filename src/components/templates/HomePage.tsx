@@ -4,7 +4,7 @@ import { all_API } from "@libs/api/allApi";
 import { IMessages, ISeen } from "@libs/api/interface/messages";
 import { useWindowSize } from "@libs/hooks/useWindowSize";
 import { setDragCountHandler } from "@store/app/app.action";
-import { clearDragCount } from "@store/app/app.slice";
+import { clearDragCount, getAppState, updateIsMobile } from "@store/app/app.slice";
 import { getConversationState, updateUnseenCount } from "@store/conversations.slice";
 import { getUserState } from "@store/user/user.slice";
 import { FC, useEffect, useRef, useState } from "react";
@@ -17,11 +17,17 @@ export const HomePage: FC = () => {
 	const [activeUsers, setActiveUsers] = useState<IActiveUsers[]>([]);
 	const [newMsg, setNewMsg] = useState<IMessages["messages"][0]>(null);
 	const [seenData, setSeenData] = useState<ISeen>(null);
-	const [showSideBar, setShowSidebar] = useState<boolean>(true);
+
 	const user = useSelector(getUserState);
+	const { isMobile } = useSelector(getAppState);
 	const { currentConversation } = useSelector(getConversationState);
 	const dispatch = useDispatch();
 	const socket = useRef<any>();
+
+	const isMobileView = useWindowSize().width < 525.9;
+	useEffect(() => {
+		dispatch(updateIsMobile(isMobileView));
+	}, [isMobileView]);
 
 	useEffect(() => {
 		socket.current = io(process.env.apiURL);
@@ -87,8 +93,6 @@ export const HomePage: FC = () => {
 		}
 	};
 
-	const isMobileView = useWindowSize().width < 525.9;
-
 	return (
 		<Row
 			className='h-100vh'
@@ -98,17 +102,11 @@ export const HomePage: FC = () => {
 			onDragEnd={setDragCountHandler}
 			onDrop={() => dispatch(clearDragCount())}
 		>
-			{isMobileView ? (
-				currentConversation ? (
-					<SideBar
-						show={showSideBar}
-						setShow={setShowSidebar}
-						messages={messages}
-						setMessages={setMessages}
-					/>
-				) : (
+			{isMobile ? (
+				<>
+					<SideBar messages={messages} setMessages={setMessages} />
 					<ConversationLists isMobileView activeUsers={activeUsers} />
-				)
+				</>
 			) : (
 				<>
 					<ConversationLists activeUsers={activeUsers} />

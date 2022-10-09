@@ -2,20 +2,30 @@ import { DropdownItem } from "@components/atoms";
 import { IconDropdown } from "@components/molecules";
 import { useWindowSize } from "@libs/hooks/useWindowSize";
 import Icon, { arrowLeft, riSettings } from "@libs/icons";
+import { updateShowSidebar } from "@store/app/app.slice";
+import { updateCurrentConversation } from "@store/conversations.slice";
 import { revokeAuthUser } from "@store/user/user.action";
 import Router from "next/router";
 import { FC } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
-export const ConversationHeader: FC<PropsType> = ({ name, mobile }) => {
+export const ConversationHeader: FC<PropsType> = ({ name, mobile, backArrow }) => {
+	const dispatch = useDispatch();
+
 	const isMobileView = useWindowSize().width < 525.9;
+
+	const closeSidebar = () => {
+		dispatch(updateShowSidebar(false));
+		dispatch(updateCurrentConversation(null));
+	};
 
 	return (
 		<Wrapper>
 			<div className={`d-flex ${isMobileView ? "justify-content-between" : "align-item-center"}`}>
-				{isMobileView && (
+				{backArrow && (
 					<div className='d-flex align-items-center'>
-						<span>
+						<span role='button' onClick={closeSidebar}>
 							<Icon path={arrowLeft} />
 						</span>
 					</div>
@@ -50,9 +60,14 @@ export const ConversationHeader: FC<PropsType> = ({ name, mobile }) => {
 	);
 };
 
+ConversationHeader.defaultProps = {
+	backArrow: false,
+};
+
 interface PropsType {
 	name: string;
 	mobile: string;
+	backArrow?: boolean;
 }
 
 const Wrapper = styled.div`
