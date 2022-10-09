@@ -1,7 +1,7 @@
 import { all_API } from "@libs/api/allApi";
 import { IConversationList } from "@libs/api/interface/user";
 import { withAuth } from "@libs/hoc";
-import { updateAllConversation } from "@store/conversations";
+import { updateAllConversation } from "@store/conversations.slice";
 import type { NextPage, NextPageContext } from "next";
 import { useDispatch } from "react-redux";
 import { HomePageUnit, MainLayout } from "../components/templates";

@@ -1,6 +1,6 @@
 import { Avatar, Button } from "@components/atoms";
 import { IActiveUsers } from "@components/templates/HomePage";
-import { getConversationState, updateCurrentConversation, updateUnseenCount } from "@store/conversations";
+import { getConversationState, updateCurrentConversation, updateUnseenCount } from "@store/conversations.slice";
 import { getUserState } from "@store/user/user.slice";
 import { nameShortener } from "@utils/helpers";
 import { FC, useState } from "react";
@@ -13,7 +13,7 @@ import { SearchModal } from "./SearchModal";
 export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView = false }) => {
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const user = useSelector(getUserState);
-	const { currentConversaion, allConversations } = useSelector(getConversationState);
+	const { currentConversation, allConversations } = useSelector(getConversationState);
 	const dispatch = useDispatch();
 
 	return (
@@ -30,7 +30,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView = f
 							<ConversationListItem
 								key={el?._id}
 								className={`ps-2 py-1 border-bottom border-secondary d-flex ${
-									currentConversaion?._id === el._id && "active"
+									currentConversation?._id === el._id && "active"
 								}`}
 								role='button'
 								onClick={(e) => {

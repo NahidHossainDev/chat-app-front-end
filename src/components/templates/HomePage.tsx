@@ -3,13 +3,15 @@ import SideBar from "@components/organisms/SideBar";
 import { all_API } from "@libs/api/allApi";
 import { IMessages, ISeen } from "@libs/api/interface/messages";
 import { useWindowSize } from "@libs/hooks/useWindowSize";
-import { initialDragCount, updateDragCount } from "@store/app";
-import { getConversationState, updateUnseenCount } from "@store/conversations";
+import { setDragCountHandler } from "@store/app/app.action";
+import { clearDragCount } from "@store/app/app.slice";
+import { getConversationState, updateUnseenCount } from "@store/conversations.slice";
 import { getUserState } from "@store/user/user.slice";
 import { FC, useEffect, useRef, useState } from "react";
 import { Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
+
 export const HomePage: FC = () => {
 	const [messages, setMessages] = useState<IMessages["messages"]>([]);
 	const [activeUsers, setActiveUsers] = useState<IActiveUsers[]>([]);
@@ -17,7 +19,7 @@ export const HomePage: FC = () => {
 	const [seenData, setSeenData] = useState<ISeen>(null);
 	const [showSideBar, setShowSidebar] = useState<boolean>(true);
 	const user = useSelector(getUserState);
-	const { currentConversaion } = useSelector(getConversationState);
+	const { currentConversation } = useSelector(getConversationState);
 	const dispatch = useDispatch();
 	const socket = useRef<any>();
 
@@ -59,7 +61,7 @@ export const HomePage: FC = () => {
 
 	useEffect(() => {
 		if (newMsg) {
-			if (newMsg?.conversationId === currentConversaion?._id) {
+			if (newMsg?.conversationId === currentConversation?._id) {
 				setMessages((prev) => [...prev, newMsg]);
 			} else {
 				const payload = {
@@ -87,29 +89,18 @@ export const HomePage: FC = () => {
 
 	const isMobileView = useWindowSize().width < 525.9;
 
-	const handleDrag = function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		if (e.type === "dragenter") {
-			!!currentConversaion && dispatch(updateDragCount("INCREMENT"));
-		} else if (e.type === "dragleave" || e.type === "dragend") {
-			!!currentConversaion && dispatch(updateDragCount("DECREMENT"));
-		}
-	};
-
 	return (
 		<Row
 			className='h-100vh'
-			onDragEnter={handleDrag}
-			onDragOver={handleDrag}
-			onDragLeave={handleDrag}
-			onDragEnd={handleDrag}
-			onDrop={() => dispatch(initialDragCount())}
+			onDragEnter={setDragCountHandler}
+			onDragOver={setDragCountHandler}
+			onDragLeave={setDragCountHandler}
+			onDragEnd={setDragCountHandler}
+			onDrop={() => dispatch(clearDragCount())}
 		>
 			{isMobileView ? (
-				currentConversaion ? (
+				currentConversation ? (
 					<SideBar
-						handleDrag={handleDrag}
 						show={showSideBar}
 						setShow={setShowSidebar}
 						messages={messages}
@@ -121,7 +112,7 @@ export const HomePage: FC = () => {
 			) : (
 				<>
 					<ConversationLists activeUsers={activeUsers} />
-					<MessageView messages={messages} setMessages={setMessages} handleDrag={handleDrag} />
+					<MessageView messages={messages} setMessages={setMessages} />
 				</>
 			)}
 		</Row>

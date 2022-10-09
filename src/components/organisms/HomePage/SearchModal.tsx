@@ -4,7 +4,7 @@ import { all_API } from "@libs/api/allApi";
 import { ISearchUserData } from "@libs/api/interface/user";
 import { useDebounced } from "@libs/hooks/useDebounce";
 import Icon, { close, search } from "@libs/icons";
-import { updateCurrentConversation } from "@store/conversations";
+import { updateCurrentConversation } from "@store/conversations.slice";
 import { useRouter } from "next/router";
 import { ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";

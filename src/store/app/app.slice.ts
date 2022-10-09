@@ -10,7 +10,7 @@ export const appSlice = createSlice({
 	name: "appState",
 	initialState,
 	reducers: {
-		initialDragCount(state) {
+		clearDragCount(state) {
 			state.dragCount = 0;
 		},
 		updateDragCount(state, action: PayloadAction<"INCREMENT" | "DECREMENT">) {
@@ -21,7 +21,7 @@ export const appSlice = createSlice({
 	},
 });
 
-export const { updateDragCount, updateShowSidebar, initialDragCount } = appSlice.actions;
+export const { updateDragCount, updateShowSidebar, clearDragCount } = appSlice.actions;
 export const getAppState = (state: AppState) => state.appState;
 
 export default appSlice.reducer;

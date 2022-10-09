@@ -2,7 +2,7 @@ import { FileItem } from "@components/molecules";
 import { all_API } from "@libs/api/allApi";
 import { FileState, IMessages } from "@libs/api/interface/messages";
 import Icon, { attachment as attachIcon, planeSend } from "@libs/icons";
-import { getConversationState } from "@store/conversations";
+import { getConversationState } from "@store/conversations.slice";
 import { getUserState } from "@store/user/user.slice";
 import { ChangeEvent, Dispatch, FC, SetStateAction, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -10,23 +10,23 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import { DragDropFile } from "./DragDropFile";
 
-export const ComposeBox: FC<PropsType> = ({ setMessages, handleDrag }) => {
+export const ComposeBox: FC<PropsType> = ({ setMessages }) => {
 	const [text, setText] = useState<string>("");
 	const [attachment, setAttachment] = useState<FileState[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const fileInput = useRef<HTMLInputElement>();
 
 	const user = useSelector(getUserState);
-	const { currentConversaion } = useSelector(getConversationState);
+	const { currentConversation } = useSelector(getConversationState);
 
 	const sendMessage = async () => {
 		if (text || (attachment[0].gDriveID && !loading)) {
 			const reciver =
-				currentConversaion?.creator?.id === user?.id
-					? currentConversaion.participant
-					: currentConversaion?.creator;
+				currentConversation?.creator?.id === user?.id
+					? currentConversation.participant
+					: currentConversation?.creator;
 			const payload = {
-				conversationId: currentConversaion?._id,
+				conversationId: currentConversation?._id,
 				message: text,
 				receiverId: reciver?.id,
 				receiverName: reciver?.name,
@@ -127,14 +127,13 @@ export const ComposeBox: FC<PropsType> = ({ setMessages, handleDrag }) => {
 					<Icon path={planeSend} />
 				</div>
 			</Wrapper>
-			<DragDropFile handleOnChange={handleFileUpload} handleDrag={handleDrag} />
+			<DragDropFile handleOnChange={handleFileUpload} />
 		</>
 	);
 };
 
 interface PropsType {
 	// sendMessage: (e: string) => Promise<boolean>;
-	handleDrag: (e: any) => void;
 	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
 }
 

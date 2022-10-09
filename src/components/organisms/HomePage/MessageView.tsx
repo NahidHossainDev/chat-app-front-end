@@ -1,7 +1,7 @@
 import { FileItem } from "@components/molecules";
 import { all_API } from "@libs/api/allApi";
 import { IMessages } from "@libs/api/interface/messages";
-import { getConversationState } from "@store/conversations";
+import { getConversationState } from "@store/conversations.slice";
 import { getUserState } from "@store/user/user.slice";
 import { scrollToBottom } from "@utils/helpers";
 import { Dispatch, FC, SetStateAction, useEffect, useRef } from "react";
@@ -11,15 +11,15 @@ import styled from "styled-components";
 import { ComposeBox } from "./ComposeBox";
 import { ConversationHeader } from "./ConversationHeader";
 
-export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) => {
+export const MessageView: FC<PropsType> = ({ messages, setMessages }) => {
 	const user = useSelector(getUserState);
-	const { currentConversaion } = useSelector(getConversationState);
+	const { currentConversation } = useSelector(getConversationState);
 	const lastMsg = useRef(null);
 
 	const getMessage = async () => {
-		if (currentConversaion?._id) {
+		if (currentConversation?._id) {
 			try {
-				const { success, data, message } = await all_API.getMessages(currentConversaion?._id);
+				const { success, data, message } = await all_API.getMessages(currentConversation?._id);
 				if (success) {
 					setMessages(data?.messages);
 				}
@@ -49,7 +49,7 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 
 	useEffect(() => {
 		getMessage();
-	}, [currentConversaion]);
+	}, [currentConversation]);
 
 	useEffect(() => {
 		const unSeenIDs = [];
@@ -59,7 +59,7 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 		});
 		if (unSeenIDs.length > 0) {
 			const payload = {
-				conversationId: currentConversaion?._id,
+				conversationId: currentConversation?._id,
 				msgIDs: unSeenIDs,
 			};
 			updateSeenUnSeen(payload, "SEEN");
@@ -69,18 +69,18 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 
 	return (
 		<Wrapper>
-			{currentConversaion ? (
+			{currentConversation ? (
 				<div className='RightSide'>
 					<ConversationHeader
 						name={
-							currentConversaion?.creator.id === user.id
-								? currentConversaion?.participant.name
-								: currentConversaion?.creator.name
+							currentConversation?.creator.id === user.id
+								? currentConversation?.participant.name
+								: currentConversation?.creator.name
 						}
 						mobile={
-							currentConversaion?.creator.id === user.id
-								? currentConversaion?.participant.mobile
-								: currentConversaion?.creator.mobile
+							currentConversation?.creator.id === user.id
+								? currentConversation?.participant.mobile
+								: currentConversation?.creator.mobile
 						}
 					/>
 					<div className='Text_Container VerticalScroller' onClick={(e) => e.preventDefault()}>
@@ -122,7 +122,7 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 						</div>
 					</div>
 
-					<ComposeBox setMessages={setMessages} {...rest} />
+					<ComposeBox setMessages={setMessages} />
 				</div>
 			) : (
 				<div className='d-flex h-100'>
@@ -136,7 +136,6 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 interface PropsType {
 	messages: IMessages["messages"];
 	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
-	handleDrag: (e) => void;
 }
 
 const Wrapper = styled(Col)`

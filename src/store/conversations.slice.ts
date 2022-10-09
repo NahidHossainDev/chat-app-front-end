@@ -4,7 +4,7 @@ import { AppState } from "@store";
 
 const initialState: IConversationState = {
 	allConversations: null,
-	currentConversaion: null,
+	currentConversation: null,
 };
 
 export const conversationSlice = createSlice({
@@ -16,7 +16,7 @@ export const conversationSlice = createSlice({
 		},
 
 		updateCurrentConversation: (state, action: PayloadAction<IConversationList>) => {
-			state.currentConversaion = action.payload;
+			state.currentConversation = action.payload;
 		},
 		updateUnseenCount: {
 			prepare(convId: string, type: "ADD" | "REMOVE") {
@@ -41,7 +41,7 @@ export const getConversationState = (state: AppState) => state.conversations;
 
 type IConversationState = {
 	allConversations: IConversationList[];
-	currentConversaion: IConversationList;
+	currentConversation: IConversationList;
 };
 type IUpdateUnseenPayload = {
 	convId: string;

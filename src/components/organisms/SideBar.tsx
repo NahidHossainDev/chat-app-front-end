@@ -1,5 +1,5 @@
 import { IMessages } from "@libs/api/interface/messages";
-import { updateCurrentConversation } from "@store/conversations";
+import { updateCurrentConversation } from "@store/conversations.slice";
 import { useRouter } from "next/router";
 import { Dispatch, FC, SetStateAction, useEffect } from "react";
 import { Offcanvas } from "react-bootstrap";
@@ -35,7 +35,6 @@ interface PropsType {
 	setShow: Dispatch<SetStateAction<boolean>>;
 	messages: IMessages["messages"];
 	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
-	handleDrag: (e) => void;
 }
 
 const OffCanvasWrapper = styled(Offcanvas)`
