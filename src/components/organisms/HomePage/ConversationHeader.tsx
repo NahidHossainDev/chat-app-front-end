@@ -24,7 +24,7 @@ export const ConversationHeader: FC<PropsType> = ({ name, mobile }) => {
 					<p className='mb-0 text-light'>{name}</p>
 					<small className='text-secondary'>{mobile}</small>
 				</div>
-				<span role='button' className={!isMobileView && "ms-auto"}>
+				<span role='button' className={!isMobileView ? "ms-auto" : ""}>
 					<IconDropdown
 						alignRight
 						variant='primary'

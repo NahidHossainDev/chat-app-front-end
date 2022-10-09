@@ -35,8 +35,6 @@ interface PropsType {
 	setShow: Dispatch<SetStateAction<boolean>>;
 	messages: IMessages["messages"];
 	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
-	dragActive: number;
-	setDragActive: Dispatch<SetStateAction<number>>;
 	handleDrag: (e) => void;
 }
 

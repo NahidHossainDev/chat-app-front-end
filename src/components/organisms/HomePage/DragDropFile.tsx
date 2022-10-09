@@ -1,11 +1,16 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { getAppState, initialDragCount } from "@store/app";
+import { FC } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 
-export const DragDropFile: FC<PropsType> = ({ dragActive, setDragActive, handleDrag, handleOnChange }) => {
+export const DragDropFile: FC<PropsType> = ({ handleDrag, handleOnChange }) => {
+	const { dragCount } = useSelector(getAppState);
+	const dispatch = useDispatch();
+
 	const handleDrop = function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		setDragActive(0);
+		dispatch(initialDragCount());
 
 		const { files: f } = e.dataTransfer;
 		if (f && f[0]) {
@@ -20,20 +25,18 @@ export const DragDropFile: FC<PropsType> = ({ dragActive, setDragActive, handleD
 
 	return (
 		<FromWrapper
-			dragStart={dragActive > 0}
+			dragStart={dragCount > 0}
 			id='form-file-upload'
 			onDragEnter={handleDrag}
 			onDragOver={handleDrag}
 			onDrop={handleDrop}
 		>
-			{dragActive > 0 && <h4 className='text-secondary'>Drop your file here...</h4>}
+			{dragCount > 0 && <h4 className='text-secondary'>Drop your file here...</h4>}
 		</FromWrapper>
 	);
 };
 
 interface PropsType {
-	dragActive: number;
-	setDragActive: Dispatch<SetStateAction<number>>;
 	handleDrag: (e) => void;
 	handleOnChange: (e) => Promise<void>;
 }

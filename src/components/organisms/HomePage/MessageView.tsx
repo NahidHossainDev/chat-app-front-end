@@ -126,7 +126,7 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 				</div>
 			) : (
 				<div className='d-flex h-100'>
-					<p className='m-auto'> Open an conversation to start</p>
+					<h4 className='m-auto text-secondary'> Open a conversation to start</h4>
 				</div>
 			)}
 		</Wrapper>
@@ -136,8 +136,6 @@ export const MessageView: FC<PropsType> = ({ messages, setMessages, ...rest }) =
 interface PropsType {
 	messages: IMessages["messages"];
 	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
-	dragActive: number;
-	setDragActive: Dispatch<SetStateAction<number>>;
 	handleDrag: (e) => void;
 }
 

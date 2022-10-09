@@ -3,6 +3,7 @@ import SideBar from "@components/organisms/SideBar";
 import { all_API } from "@libs/api/allApi";
 import { IMessages, ISeen } from "@libs/api/interface/messages";
 import { useWindowSize } from "@libs/hooks/useWindowSize";
+import { initialDragCount, updateDragCount } from "@store/app";
 import { getConversationState, updateUnseenCount } from "@store/conversations";
 import { getUserState } from "@store/user/user.slice";
 import { FC, useEffect, useRef, useState } from "react";
@@ -15,7 +16,6 @@ export const HomePage: FC = () => {
 	const [newMsg, setNewMsg] = useState<IMessages["messages"][0]>(null);
 	const [seenData, setSeenData] = useState<ISeen>(null);
 	const [showSideBar, setShowSidebar] = useState<boolean>(true);
-	const [dragActive, setDragActive] = useState<number>(0);
 	const user = useSelector(getUserState);
 	const { currentConversaion } = useSelector(getConversationState);
 	const dispatch = useDispatch();
@@ -91,13 +91,12 @@ export const HomePage: FC = () => {
 		e.preventDefault();
 		e.stopPropagation();
 		if (e.type === "dragenter") {
-			!!currentConversaion && setDragActive((pre) => ++pre);
+			!!currentConversaion && dispatch(updateDragCount("INCREMENT"));
 		} else if (e.type === "dragleave" || e.type === "dragend") {
-			!!currentConversaion && setDragActive((pre) => --pre);
+			!!currentConversaion && dispatch(updateDragCount("DECREMENT"));
 		}
 	};
 
-	const dragParams = { dragActive, setDragActive, handleDrag };
 	return (
 		<Row
 			className='h-100vh'
@@ -105,12 +104,12 @@ export const HomePage: FC = () => {
 			onDragOver={handleDrag}
 			onDragLeave={handleDrag}
 			onDragEnd={handleDrag}
-			onDrop={() => setDragActive(0)}
+			onDrop={() => dispatch(initialDragCount())}
 		>
 			{isMobileView ? (
 				currentConversaion ? (
 					<SideBar
-						{...dragParams}
+						handleDrag={handleDrag}
 						show={showSideBar}
 						setShow={setShowSidebar}
 						messages={messages}
@@ -122,7 +121,7 @@ export const HomePage: FC = () => {
 			) : (
 				<>
 					<ConversationLists activeUsers={activeUsers} />
-					<MessageView messages={messages} setMessages={setMessages} {...dragParams} />
+					<MessageView messages={messages} setMessages={setMessages} handleDrag={handleDrag} />
 				</>
 			)}
 		</Row>

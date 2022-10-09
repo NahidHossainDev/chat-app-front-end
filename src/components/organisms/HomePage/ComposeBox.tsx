@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import { DragDropFile } from "./DragDropFile";
 
-export const ComposeBox: FC<PropsType> = ({ setMessages, ...rest }) => {
+export const ComposeBox: FC<PropsType> = ({ setMessages, handleDrag }) => {
 	const [text, setText] = useState<string>("");
 	const [attachment, setAttachment] = useState<FileState[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -127,15 +127,13 @@ export const ComposeBox: FC<PropsType> = ({ setMessages, ...rest }) => {
 					<Icon path={planeSend} />
 				</div>
 			</Wrapper>
-			<DragDropFile handleOnChange={handleFileUpload} {...rest} />
+			<DragDropFile handleOnChange={handleFileUpload} handleDrag={handleDrag} />
 		</>
 	);
 };
 
 interface PropsType {
 	// sendMessage: (e: string) => Promise<boolean>;
-	dragActive: number;
-	setDragActive: Dispatch<SetStateAction<number>>;
 	handleDrag: (e: any) => void;
 	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
 }
