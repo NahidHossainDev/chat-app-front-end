@@ -1,19 +1,17 @@
 import { DropdownItem } from "@components/atoms";
 import { IconDropdown } from "@components/molecules";
-import { useWindowSize } from "@libs/hooks/useWindowSize";
 import Icon, { arrowLeft, riSettings } from "@libs/icons";
-import { updateShowSidebar } from "@store/app/app.slice";
+import { getAppState, updateShowSidebar } from "@store/app/app.slice";
 import { updateCurrentConversation } from "@store/conversations.slice";
 import { revokeAuthUser } from "@store/user/user.action";
 import Router from "next/router";
 import { FC } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 export const ConversationHeader: FC<PropsType> = ({ name, mobile, backArrow }) => {
 	const dispatch = useDispatch();
-
-	const isMobileView = useWindowSize().width < 525.9;
+	const { isMobile } = useSelector(getAppState);
 
 	const closeSidebar = () => {
 		dispatch(updateShowSidebar(false));
@@ -22,7 +20,7 @@ export const ConversationHeader: FC<PropsType> = ({ name, mobile, backArrow }) =
 
 	return (
 		<Wrapper>
-			<div className={`d-flex ${isMobileView ? "justify-content-between" : "align-item-center"}`}>
+			<div className={`d-flex ${isMobile ? "justify-content-between" : "align-item-center"}`}>
 				{backArrow && (
 					<div className='d-flex align-items-center'>
 						<span role='button' onClick={closeSidebar}>
@@ -34,7 +32,7 @@ export const ConversationHeader: FC<PropsType> = ({ name, mobile, backArrow }) =
 					<p className='mb-0 text-light'>{name}</p>
 					<small className='text-secondary'>{mobile}</small>
 				</div>
-				<span role='button' className={!isMobileView ? "ms-auto" : ""}>
+				<span role='button' className={!isMobile ? "ms-auto" : ""}>
 					<IconDropdown
 						alignRight
 						variant='primary'

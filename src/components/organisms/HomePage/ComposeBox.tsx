@@ -1,16 +1,17 @@
 import { FileItem } from "@components/molecules";
 import { all_API } from "@libs/api/allApi";
-import { FileState, IMessages } from "@libs/api/interface/messages";
+import { FileState } from "@libs/api/interface/messages";
 import Icon, { attachment as attachIcon, planeSend } from "@libs/icons";
 import { getConversationState } from "@store/conversations.slice";
+import { addNewMessages } from "@store/message.slice";
 import { getUserState } from "@store/user/user.slice";
-import { ChangeEvent, Dispatch, FC, SetStateAction, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { ChangeEvent, FC, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import { DragDropFile } from "./DragDropFile";
 
-export const ComposeBox: FC<PropsType> = ({ setMessages }) => {
+export const ComposeBox: FC<PropsType> = () => {
 	const [text, setText] = useState<string>("");
 	const [attachment, setAttachment] = useState<FileState[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -18,6 +19,7 @@ export const ComposeBox: FC<PropsType> = ({ setMessages }) => {
 
 	const user = useSelector(getUserState);
 	const { currentConversation } = useSelector(getConversationState);
+	const dispatch = useDispatch();
 
 	const sendMessage = async () => {
 		if (text || (attachment[0].gDriveID && !loading)) {
@@ -37,7 +39,7 @@ export const ComposeBox: FC<PropsType> = ({ setMessages }) => {
 				setLoading(true);
 				const { success, data, message } = await all_API.sendMessage(payload);
 				if (success) {
-					setMessages((prev) => [...prev, data]);
+					dispatch(addNewMessages(data));
 					setText("");
 					setAttachment([]);
 				}
@@ -134,7 +136,7 @@ export const ComposeBox: FC<PropsType> = ({ setMessages }) => {
 
 interface PropsType {
 	// sendMessage: (e: string) => Promise<boolean>;
-	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
+	// setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
 }
 
 const Wrapper = styled.footer`
@@ -159,6 +161,7 @@ const Wrapper = styled.footer`
 			width: 100%;
 			padding: 0.4rem 0;
 			background-color: transparent;
+			resize: none;
 		}
 	}
 `;

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AppState } from "@store";
 
 const initialState: IUserState = {
 	id: null,
@@ -25,7 +26,7 @@ export const userSlice = createSlice({
 
 export default userSlice.reducer;
 export const { authSignIn, authSignOut } = userSlice.actions;
-export const getUserState = (state) => state.user;
+export const getUserState = (state: AppState) => state.user;
 
 type IUserState = {
 	id: string;

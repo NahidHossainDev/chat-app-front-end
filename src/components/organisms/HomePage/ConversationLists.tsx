@@ -55,6 +55,10 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView }) 
 								<div>
 									<p className='mb-0 text-light d-flex align-items-center'>
 										{nameShortener(item?.name)}
+
+										{/* Show unseen message count if message_senderId !== userId
+											& unseenMsgCount > 0
+										*/}
 										{user.id !== el?.lastSenderId && el?.unseenMsgCount > 0 && (
 											<small className='count'>
 												{el?.unseenMsgCount < 10 ? el?.unseenMsgCount : "9+"}

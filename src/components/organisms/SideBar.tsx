@@ -1,15 +1,14 @@
-import { IMessages } from "@libs/api/interface/messages";
 import { getAppState, updateShowSidebar } from "@store/app/app.slice";
 import { updateCurrentConversation } from "@store/conversations.slice";
 import { useRouter } from "next/router";
-import { Dispatch, FC, SetStateAction, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { Offcanvas } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components";
 import { MessageView } from "./HomePage";
 
-const SideBar: FC<PropsType> = ({ messages, setMessages, ...rest }) => {
+const SideBar: FC<PropsType> = () => {
 	const router = useRouter();
 	const { showSidebar } = useSelector(getAppState);
 	const dispatch = useDispatch();
@@ -25,7 +24,7 @@ const SideBar: FC<PropsType> = ({ messages, setMessages, ...rest }) => {
 	}, [router]);
 	return (
 		<OffCanvasWrapper show={showSidebar} placement={"end"} backdrop={false}>
-			<MessageView backArrow messages={messages} setMessages={setMessages} />
+			<MessageView backArrow />
 		</OffCanvasWrapper>
 	);
 };
@@ -33,8 +32,8 @@ const SideBar: FC<PropsType> = ({ messages, setMessages, ...rest }) => {
 export default SideBar;
 
 interface PropsType {
-	messages: IMessages["messages"];
-	setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
+	// messages: IMessages["messages"];
+	// setMessages: Dispatch<SetStateAction<IMessages["messages"]>>;
 }
 
 const OffCanvasWrapper = styled(Offcanvas)`

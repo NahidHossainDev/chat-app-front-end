@@ -20,9 +20,9 @@ interface Message {
 	_id: string;
 	text: string;
 	attachment?: FileState[];
-	date_time: Date;
-	createdAt: Date;
-	updatedAt: Date;
+	date_time: string;
+	createdAt: string;
+	updatedAt: string;
 	conversationId: string;
 	isSeen: boolean;
 	__v: number;

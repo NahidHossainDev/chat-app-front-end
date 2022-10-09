@@ -6,6 +6,7 @@ import { useWindowSize } from "@libs/hooks/useWindowSize";
 import { setDragCountHandler } from "@store/app/app.action";
 import { clearDragCount, getAppState, updateIsMobile } from "@store/app/app.slice";
 import { getConversationState, updateUnseenCount } from "@store/conversations.slice";
+import { addNewMessages } from "@store/message.slice";
 import { getUserState } from "@store/user/user.slice";
 import { FC, useEffect, useRef, useState } from "react";
 import { Row } from "react-bootstrap";
@@ -13,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 
 export const HomePage: FC = () => {
-	const [messages, setMessages] = useState<IMessages["messages"]>([]);
 	const [activeUsers, setActiveUsers] = useState<IActiveUsers[]>([]);
 	const [newMsg, setNewMsg] = useState<IMessages["messages"][0]>(null);
 	const [seenData, setSeenData] = useState<ISeen>(null);
@@ -51,24 +51,25 @@ export const HomePage: FC = () => {
 		});
 	}, [socket, user?.id]);
 
-	useEffect(() => {
-		if (seenData) {
-			setMessages((prevSt) => {
-				let arr = [...prevSt];
-				seenData.msgIDs.forEach((element) => {
-					arr.forEach((el, i) => {
-						if (element === el._id) arr[i].isSeen = true;
-					});
-				});
-				return arr;
-			});
-		}
-	}, [seenData]);
+	// useEffect(() => {
+	// 	if (seenData) {
+	// 		setMessages((prevSt) => {
+	// 			let arr = [...prevSt];
+	// 			seenData.msgIDs.forEach((element) => {
+	// 				arr.forEach((el, i) => {
+	// 					if (element === el._id) arr[i].isSeen = true;
+	// 				});
+	// 			});
+	// 			return arr;
+	// 		});
+	// 	}
+	// }, [seenData]);
 
 	useEffect(() => {
 		if (newMsg) {
 			if (newMsg?.conversationId === currentConversation?._id) {
-				setMessages((prev) => [...prev, newMsg]);
+				// setMessages((prev) => [...prev, newMsg]);
+				dispatch(addNewMessages(newMsg));
 			} else {
 				const payload = {
 					conversationId: newMsg?.conversationId,
@@ -84,7 +85,7 @@ export const HomePage: FC = () => {
 		try {
 			const { success, data, message } = await all_API.updateSeenUnseen(payload);
 			if (success) {
-				dispatch(updateUnseenCount(newMsg?.conversationId, "ADD"));
+				type === "UNSEEN" && dispatch(updateUnseenCount(newMsg?.conversationId, "ADD"));
 			} else {
 				console.log(data);
 			}
@@ -104,13 +105,13 @@ export const HomePage: FC = () => {
 		>
 			{isMobile ? (
 				<>
-					<SideBar messages={messages} setMessages={setMessages} />
+					<SideBar />
 					<ConversationLists isMobileView activeUsers={activeUsers} />
 				</>
 			) : (
 				<>
 					<ConversationLists activeUsers={activeUsers} />
-					<MessageView messages={messages} setMessages={setMessages} />
+					<MessageView />
 				</>
 			)}
 		</Row>
