@@ -3,7 +3,7 @@ import { all_API } from "@libs/api/allApi";
 import { FileState } from "@libs/api/interface/messages";
 import Icon, { attachment as attachIcon, planeSend } from "@libs/icons";
 import { getConversationState } from "@store/conversations.slice";
-import { addNewMessages } from "@store/message.slice";
+import { addNewMessages } from "@store/message/message.slice";
 import { getUserState } from "@store/user/user.slice";
 import { ChangeEvent, FC, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,7 +39,8 @@ export const ComposeBox: FC<PropsType> = () => {
 				setLoading(true);
 				const { success, data, message } = await all_API.sendMessage(payload);
 				if (success) {
-					dispatch(addNewMessages(data));
+					const payload = { data, userId: user?.id };
+					dispatch(addNewMessages(payload));
 					setText("");
 					setAttachment([]);
 				}

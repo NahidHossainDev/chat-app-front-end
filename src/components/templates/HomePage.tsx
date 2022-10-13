@@ -1,12 +1,11 @@
 import { ConversationLists, MessageView } from "@components/organisms";
 import SideBar from "@components/organisms/SideBar";
-import { all_API } from "@libs/api/allApi";
 import { IMessages, ISeen } from "@libs/api/interface/messages";
 import { useWindowSize } from "@libs/hooks/useWindowSize";
 import { setDragCountHandler } from "@store/app/app.action";
 import { clearDragCount, getAppState, updateIsMobile } from "@store/app/app.slice";
-import { getConversationState, updateUnseenCount } from "@store/conversations.slice";
-import { addNewMessages } from "@store/message.slice";
+import { newMessagesAction } from "@store/message/message.action";
+import { updateMsgSeen } from "@store/message/message.slice";
 import { getUserState } from "@store/user/user.slice";
 import { FC, useEffect, useRef, useState } from "react";
 import { Row } from "react-bootstrap";
@@ -15,12 +14,8 @@ import { io } from "socket.io-client";
 
 export const HomePage: FC = () => {
 	const [activeUsers, setActiveUsers] = useState<IActiveUsers[]>([]);
-	const [newMsg, setNewMsg] = useState<IMessages["messages"][0]>(null);
-	const [seenData, setSeenData] = useState<ISeen>(null);
-
 	const user = useSelector(getUserState);
 	const { isMobile } = useSelector(getAppState);
-	const { currentConversation } = useSelector(getConversationState);
 	const dispatch = useDispatch();
 	const socket = useRef<any>();
 
@@ -41,58 +36,16 @@ export const HomePage: FC = () => {
 
 	useEffect(() => {
 		socket.current.on("new_message", (data: IMessages["messages"][0]) => {
-			setNewMsg(data);
+			newMessagesAction(data, user, dispatch);
 		});
 	}, [socket, user?.id]);
 
 	useEffect(() => {
 		socket.current.on("msg_seen", (data: ISeen) => {
-			setSeenData(data);
+			console.log("msg_seen", { data });
+			if (data) dispatch(updateMsgSeen(data));
 		});
 	}, [socket, user?.id]);
-
-	// useEffect(() => {
-	// 	if (seenData) {
-	// 		setMessages((prevSt) => {
-	// 			let arr = [...prevSt];
-	// 			seenData.msgIDs.forEach((element) => {
-	// 				arr.forEach((el, i) => {
-	// 					if (element === el._id) arr[i].isSeen = true;
-	// 				});
-	// 			});
-	// 			return arr;
-	// 		});
-	// 	}
-	// }, [seenData]);
-
-	useEffect(() => {
-		if (newMsg) {
-			if (newMsg?.conversationId === currentConversation?._id) {
-				// setMessages((prev) => [...prev, newMsg]);
-				dispatch(addNewMessages(newMsg));
-			} else {
-				const payload = {
-					conversationId: newMsg?.conversationId,
-					msgIDs: [],
-				};
-				updateSeenUnSeen(payload, "UNSEEN");
-			}
-		}
-	}, [newMsg]);
-
-	const updateSeenUnSeen = async (data, type: "UNSEEN" | "SEEN") => {
-		const payload = { ...data, type };
-		try {
-			const { success, data, message } = await all_API.updateSeenUnseen(payload);
-			if (success) {
-				type === "UNSEEN" && dispatch(updateUnseenCount(newMsg?.conversationId, "ADD"));
-			} else {
-				console.log(data);
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
 
 	return (
 		<Row

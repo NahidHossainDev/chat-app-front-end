@@ -28,7 +28,7 @@ export default userSlice.reducer;
 export const { authSignIn, authSignOut } = userSlice.actions;
 export const getUserState = (state: AppState) => state.user;
 
-type IUserState = {
+export type IUserState = {
 	id: string;
 	name: string;
 	mobile: string;

@@ -1,27 +1,35 @@
 import { FileItem } from "@components/molecules";
+import { EntityId } from "@reduxjs/toolkit";
 import store, { AppState } from "@store";
-import { selectMessageByID } from "@store/message.slice";
+import { getLastSeenMsgId, selectMessageByID, updateLastSeenMsgId } from "@store/message/message.slice";
 import { getUserState } from "@store/user/user.slice";
-import { useSelector } from "react-redux";
+import React, { FC, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-const SingleText = ({ messageId, nextMsgId, lastMsg }) => {
-	const user = useSelector(getUserState);
+const SingleText: FC<PropsType> = ({ messageId, nextMsgId }) => {
 	const el = useSelector((state: AppState) => selectMessageByID(state, messageId));
-
+	const user = useSelector(getUserState);
+	const lastSeenId = useSelector(getLastSeenMsgId);
 	const mySelf = el.sender?.id === user?.id;
-	let seen = false;
+
+	const dispatch = useDispatch();
 
 	// show (seen) only if both conditions are true.
 	//  "isSeen" === true, and if this is the last message of mySelf.
-	if (mySelf && el?.isSeen) {
-		if (nextMsgId) {
-			const nextMsg = selectMessageByID(store.getState(), nextMsgId);
-			if (nextMsg?.sender.id === user?.id && !nextMsg.isSeen) seen = true;
-		} else {
-			seen = true;
+	useEffect(() => {
+		if (mySelf && el?.isSeen) {
+			if (nextMsgId) {
+				const nextMsg = selectMessageByID(store.getState(), nextMsgId);
+				if (nextMsg?.sender.id === user?.id && !nextMsg.isSeen) {
+					dispatch(updateLastSeenMsgId(messageId));
+				}
+			} else {
+				dispatch(updateLastSeenMsgId(messageId));
+			}
 		}
-	}
+	}, []);
+	// console.log(lastSeenId);
 
 	return (
 		<TextWrapper className={`${mySelf ? "text-end" : ""}`}>
@@ -34,13 +42,17 @@ const SingleText = ({ messageId, nextMsgId, lastMsg }) => {
 					))}
 				</div>
 			</span>
-			{seen && <div className='text-success'>(seen)</div>}
-			<div ref={lastMsg} />
+			{lastSeenId === messageId && <div className='text-success'>(seen)</div>}
 		</TextWrapper>
 	);
 };
 
-export default SingleText;
+export default React.memo(SingleText);
+
+interface PropsType {
+	messageId: EntityId;
+	nextMsgId: EntityId;
+}
 
 const TextWrapper = styled.div`
 	.text-viwer {
