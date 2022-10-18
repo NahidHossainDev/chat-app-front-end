@@ -1,6 +1,6 @@
 import { Avatar, Button } from "@components/atoms";
 import { IActiveUsers } from "@components/templates/HomePage";
-import { IConversationList } from "@libs/api/interface/user";
+import { IConversationList, ICreatorOrParticipant } from "@libs/api/interface/user";
 import { getAppState, updateShowSidebar } from "@store/app/app.slice";
 import { getConversationState, updateCurrentConversation, updateUnseenCount } from "@store/conversations.slice";
 import { getUserState } from "@store/user/user.slice";
@@ -28,7 +28,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView }) 
 
 	return (
 		<Wrapper md={3} sm={4} xs={isMobileView ? 12 : 5} className='h-100'>
-			<ConversationHeader name={user.name} mobile={user.mobile} />
+			<ConversationHeader user={user as ICreatorOrParticipant} />
 
 			<div className='VerticalScroller'>
 				{allConversations?.length > 0 ? (

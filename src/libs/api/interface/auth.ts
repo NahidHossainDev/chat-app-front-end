@@ -24,11 +24,12 @@ interface ILoginErr {
 }
 
 export interface IAuth {
-	id: string;
+	_id: string;
 	name: string;
-	mobile: string;
+	mobile?: string;
 	email: string;
 	role: string;
 	token: string;
+	googleID?: string;
 	errors?: ILoginErr;
 }

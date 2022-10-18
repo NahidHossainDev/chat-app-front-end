@@ -37,15 +37,10 @@ export const MessageView: FC<PropsType> = ({ backArrow }) => {
 				<div className='RightSide'>
 					<ConversationHeader
 						backArrow={backArrow}
-						name={
+						user={
 							currentConversation?.creator.id === user.id
-								? currentConversation?.participant.name
-								: currentConversation?.creator.name
-						}
-						mobile={
-							currentConversation?.creator.id === user.id
-								? currentConversation?.participant.mobile
-								: currentConversation?.creator.mobile
+								? currentConversation?.participant
+								: currentConversation?.creator
 						}
 					/>
 					<TextContainer />

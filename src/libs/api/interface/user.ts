@@ -9,11 +9,12 @@ export interface ISearchUserData {
 	users: IUser[];
 }
 
-interface ICreatorOrParticipant {
+export interface ICreatorOrParticipant {
 	id: string;
 	name: string;
 	mobile: string;
 	avatar: string;
+	email?: string;
 }
 
 export interface IConversationList {

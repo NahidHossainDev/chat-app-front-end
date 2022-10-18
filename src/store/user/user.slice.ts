@@ -7,6 +7,8 @@ const initialState: IUserState = {
 	mobile: null,
 	email: null,
 	role: null,
+	avatar: null,
+	googleID: null,
 	isAuthenticate: false,
 };
 
@@ -31,8 +33,10 @@ export const getUserState = (state: AppState) => state.user;
 export type IUserState = {
 	id: string;
 	name: string;
-	mobile: string;
+	mobile?: string;
 	email: string;
 	role: string;
+	avatar: string;
+	googleID?: string;
 	isAuthenticate?: boolean;
 };

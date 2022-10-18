@@ -1,15 +1,17 @@
-import { DropdownItem } from "@components/atoms";
+import { Avatar, DropdownItem } from "@components/atoms";
 import { IconDropdown } from "@components/molecules";
+import { ICreatorOrParticipant } from "@libs/api/interface";
 import Icon, { arrowLeft, riSettings } from "@libs/icons";
 import { getAppState, updateShowSidebar } from "@store/app/app.slice";
 import { updateCurrentConversation } from "@store/conversations.slice";
 import { revokeAuthUser } from "@store/user/user.action";
+import { fileNameShortener } from "@utils/helpers";
 import Router from "next/router";
 import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-export const ConversationHeader: FC<PropsType> = ({ name, mobile, backArrow }) => {
+export const ConversationHeader: FC<PropsType> = ({ user, backArrow }) => {
 	const dispatch = useDispatch();
 	const { isMobile } = useSelector(getAppState);
 
@@ -28,9 +30,22 @@ export const ConversationHeader: FC<PropsType> = ({ name, mobile, backArrow }) =
 						</span>
 					</div>
 				)}
-				<div className='user'>
-					<p className='mb-0 text-light'>{name}</p>
-					<small className='text-secondary'>{mobile}</small>
+				<div className='user d-flex'>
+					{user?.avatar && (
+						<Avatar
+							size='sm'
+							className='me-2'
+							src={
+								user.avatar.includes(".googleusercontent.com")
+									? user.avatar
+									: `https://drive.google.com/uc?export=view&id=${user?.avatar}`
+							}
+						/>
+					)}
+					<div>
+						<p className='mb-0 text-light'>{user?.name}</p>
+						<small className='text-secondary'>{fileNameShortener(user?.email)}</small>
+					</div>
 				</div>
 				<span role='button' className={!isMobile ? "ms-auto" : ""}>
 					<IconDropdown
@@ -63,8 +78,7 @@ ConversationHeader.defaultProps = {
 };
 
 interface PropsType {
-	name: string;
-	mobile: string;
+	user: ICreatorOrParticipant;
 	backArrow?: boolean;
 }
 
