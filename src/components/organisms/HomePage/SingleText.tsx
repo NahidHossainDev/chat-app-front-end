@@ -29,7 +29,6 @@ const SingleText: FC<PropsType> = ({ messageId, nextMsgId }) => {
 			}
 		}
 	}, []);
-	// console.log(lastSeenId);
 
 	return (
 		<TextWrapper className={`${mySelf ? "text-end" : ""}`}>

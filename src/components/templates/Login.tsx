@@ -49,12 +49,13 @@ export const Login: FC<{ data?: IAuth }> = ({ data }) => {
 	};
 
 	const handleGoogleAuthURL = async () => {
-		const { success, data, message } = await all_API.getGoogleAuthURL();
-		if (success) {
-			// window.open(data.authURL, "_blank", "height=600,width=400");
-			router.push(data.authURL);
-		}
-		console.log(data, message);
+		try {
+			const { success, data, message } = await all_API.getGoogleAuthURL();
+			if (success) {
+				// window.open(data.authURL, "_blank", "height=600,width=400");
+				router.push(data.authURL);
+			}
+		} catch (error) {}
 	};
 
 	const { values, errors, handleChange, handleSubmit, setErrors } = useNewForm(initailValues, onSubmitHandler);
