@@ -51,6 +51,7 @@ export const SearchModal: FC<PropsType> = ({ show, setShow }) => {
 	);
 
 	useEffect((): any => {
+		if (show) document.getElementById("search-box").focus();
 		setValues(initialValues);
 		setSearchRes([]);
 	}, [show]);
@@ -75,6 +76,7 @@ export const SearchModal: FC<PropsType> = ({ show, setShow }) => {
 					bgGray
 					srOnly
 					rounded
+					id='search-box'
 					iconPosition='end'
 					className='mb-0'
 					icon={search}

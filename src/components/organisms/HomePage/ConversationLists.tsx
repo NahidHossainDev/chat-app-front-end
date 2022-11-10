@@ -45,13 +45,12 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView }) 
 								role='button'
 								onClick={(e) => conversationClickHandler(e, el)}
 							>
-								{item?.avatar && (
-									<Avatar
-										size='sm'
-										className='me-1'
-										src={`https://drive.google.com/uc?export=view&id=${item?.avatar}`}
-									/>
-								)}
+								<Avatar
+									size='sm'
+									className='me-1'
+									src={item?.avatar ? item.avatar : "/image/default-avatar.jpg"}
+								/>
+
 								<div>
 									<p className='mb-0 text-light d-flex align-items-center'>
 										{nameShortener(item?.name)}

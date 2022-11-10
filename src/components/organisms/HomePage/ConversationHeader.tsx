@@ -31,17 +31,18 @@ export const ConversationHeader: FC<PropsType> = ({ user, backArrow }) => {
 					</div>
 				)}
 				<div className='user d-flex'>
-					{user?.avatar && (
-						<Avatar
-							size='sm'
-							className='me-2'
-							src={
-								user.avatar.includes(".googleusercontent.com")
+					<Avatar
+						size='sm'
+						className='me-2'
+						src={
+							user?.avatar
+								? user.avatar.includes(".googleusercontent.com")
 									? user.avatar
 									: `https://drive.google.com/uc?export=view&id=${user?.avatar}`
-							}
-						/>
-					)}
+								: "/image/default-avatar.jpg"
+						}
+					/>
+
 					<div>
 						<p className='mb-0 text-light'>{user?.name}</p>
 						<small className='text-secondary'>{fileNameShortener(user?.email)}</small>
