@@ -5,7 +5,7 @@ import { useWindowSize } from "@libs/hooks/useWindowSize";
 import { setDragCountHandler } from "@store/app/app.action";
 import { clearDragCount, getAppState, updateIsMobile } from "@store/app/app.slice";
 import { newMessagesAction } from "@store/message/message.action";
-import { updateMsgSeen } from "@store/message/message.slice";
+import { updateLastSeenMsgId, updateMsgSeen } from "@store/message/message.slice";
 import { getUserState } from "@store/user/user.slice";
 import { FC, useEffect, useRef, useState } from "react";
 import { Row } from "react-bootstrap";
@@ -43,7 +43,10 @@ export const HomePage: FC = () => {
 	useEffect(() => {
 		socket.current.on("msg_seen", (data: ISeen) => {
 			console.log("msg_seen", { data });
-			if (data) dispatch(updateMsgSeen(data));
+			if (data) {
+				dispatch(updateMsgSeen(data));
+				if (data.type === "SEEN") dispatch(updateLastSeenMsgId(data?.msgIDs[data?.msgIDs.length - 1]));
+			}
 		});
 	}, [socket, user?.id]);
 
