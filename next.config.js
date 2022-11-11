@@ -7,7 +7,7 @@ const nextConfig = {
 		gDriveLink: process.env.G_DRIVE_LINK,
 	},
 
-	reactStrictMode: false,
+	reactStrictMode: true,
 	compiler: {
 		styledComponents: true,
 	},
