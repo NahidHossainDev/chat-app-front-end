@@ -65,13 +65,16 @@ export const ComposeBox: FC<PropsType> = () => {
 				setLoading(true);
 				const { success, data, message } = await all_API.uploadFile(formData);
 				if (success) {
-					setAttachment((prevState) => {
-						let newArr = [...prevState];
-						data.forEach((el) => {
-							newArr = newArr.map((n) => (el.filename === n.fileName ? { ...n, gDriveID: el.id } : n));
+					data[0] &&
+						setAttachment((prevState) => {
+							let newArr = [...prevState];
+							data.forEach((el) => {
+								newArr = newArr.map((n) =>
+									el.filename === n.fileName ? { ...n, gDriveID: el.id } : n
+								);
+							});
+							return newArr;
 						});
-						return newArr;
-					});
 				} else {
 					message && toast.error(message);
 					// remove from state
