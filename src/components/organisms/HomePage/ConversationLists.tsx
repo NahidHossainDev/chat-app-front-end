@@ -27,7 +27,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView }) 
 	};
 
 	return (
-		<Wrapper lg={3} md={4} xs={isMobileView ? 12 : 5} className='h-100'>
+		<Wrapper lg={3} md={4} xs={isMobileView ? 12 : 5}>
 			<ConversationHeader user={user as ICreatorOrParticipant} />
 
 			<div className='VerticalScroller'>
@@ -39,7 +39,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView }) 
 						return (
 							<ConversationListItem
 								key={el?._id}
-								className={`ps-2 py-1 border-bottom border-secondary d-flex ${
+								className={`ps-2 py-1 border-bottom border-secondary d-flex align-items-center ${
 									currentConversation?._id === el._id && "active"
 								}`}
 								role='button'
@@ -64,7 +64,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView }) 
 											</small>
 										)}
 									</p>
-									<small className='text-secondary position-relative'>{item?.email}</small>
+									{/* <small className='text-secondary position-relative'>{item?.email}</small> */}
 								</div>
 								<span className={`text-primary2 ms-auto ${isActive ? "active-user" : ""}`} />
 							</ConversationListItem>
@@ -103,13 +103,13 @@ interface PropsType {
 const Wrapper = styled(Col)`
 	display: flex;
 	flex-direction: column;
-	min-height: 100vh;
+	min-height: calc(100vh - 80px);
 	max-height: 100vh;
 
 	.VerticalScroller {
 		height: 100%;
 		overflow-y: auto;
-		margin: 1rem 0;
+		/* margin: 1rem 0; */
 	}
 
 	.create-new-chat {
@@ -118,7 +118,7 @@ const Wrapper = styled(Col)`
 		border-radius: 0.4rem;
 		text-align: center;
 		margin-top: auto;
-		margin-bottom: 1rem;
+		/* margin-bottom: 1rem; */
 	}
 
 	.count {

@@ -71,7 +71,7 @@ const Wrapper = styled(Col)`
 		max-height: 100vh;
 
 		.VerticalScroller {
-			height: 100%;
+			/* height: 100%; */
 			overflow-y: auto;
 		}
 		.Text_Container {

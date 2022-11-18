@@ -51,7 +51,6 @@ export const HomePage: FC = () => {
 
 	return (
 		<Row
-			className='h-100vh'
 			onDragEnter={setDragCountHandler}
 			onDragOver={setDragCountHandler}
 			onDragLeave={setDragCountHandler}

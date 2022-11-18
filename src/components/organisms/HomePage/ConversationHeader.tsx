@@ -5,7 +5,6 @@ import Icon, { arrowLeft, riSettings } from "@libs/icons";
 import { getAppState, updateShowSidebar } from "@store/app/app.slice";
 import { updateCurrentConversation } from "@store/conversations.slice";
 import { revokeAuthUser } from "@store/user/user.action";
-import { fileNameShortener } from "@utils/helpers";
 import Router from "next/router";
 import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,23 +21,21 @@ export const ConversationHeader: FC<PropsType> = ({ user, backArrow }) => {
 
 	return (
 		<Wrapper>
-			<div className={`d-flex ${isMobile ? "justify-content-between" : "align-item-center"}`}>
+			<div className={`d-flex align-item-center`}>
 				{backArrow && (
-					<div className='d-flex align-items-center'>
+					<div className='d-flex align-items-center me-2'>
 						<span role='button' onClick={closeSidebar}>
 							<Icon path={arrowLeft} />
 						</span>
 					</div>
 				)}
-				<div className='user d-flex'>
+				<div className='d-flex align-items-center'>
 					<Avatar size='sm' className='me-2' src={user?.avatar ? user.avatar : "/image/default-avatar.jpg"} />
 
-					<div>
-						<p className='mb-0 text-light'>{user?.name}</p>
-						<small className='text-secondary'>{fileNameShortener(user?.email)}</small>
-					</div>
+					<p className='mb-0 text-light'>{user?.name}</p>
+					{/* <small className='text-secondary'>{fileNameShortener(user?.email)}</small> */}
 				</div>
-				<span role='button' className={!isMobile ? "ms-auto" : ""}>
+				<span role='button' className='ms-auto'>
 					<IconDropdown
 						alignRight
 						variant='primary'
@@ -80,7 +77,8 @@ const Wrapper = styled.div`
 	border-right: 1px solid var(--bs-secondary);
 
 	@media only screen and (max-width: 525.9px) {
-		padding: 1rem;
+		padding: 0.6rem;
+		padding-left: 1rem;
 		padding-right: 0;
 	}
 `;
