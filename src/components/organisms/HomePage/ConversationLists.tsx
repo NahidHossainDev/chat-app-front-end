@@ -103,7 +103,7 @@ interface PropsType {
 const Wrapper = styled(Col)`
 	display: flex;
 	flex-direction: column;
-	min-height: calc(100vh - 80px);
+	min-height: 100vh;
 	max-height: 100vh;
 
 	.VerticalScroller {
@@ -118,7 +118,7 @@ const Wrapper = styled(Col)`
 		border-radius: 0.4rem;
 		text-align: center;
 		margin-top: auto;
-		/* margin-bottom: 1rem; */
+		margin-bottom: 1rem;
 	}
 
 	.count {
