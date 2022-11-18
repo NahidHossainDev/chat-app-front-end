@@ -1,6 +1,6 @@
-import { ElementType, FC, InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
-import { ElementBorders } from '../../interfaces';
-import { FormControl, FormFeedback, FormGroup, FormLabel } from './styles';
+import { ElementType, FC, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { ElementBorders } from "../../interfaces";
+import { FormControl, FormFeedback, FormGroup, FormLabel } from "./styles";
 
 export const FormInput: FC<FormInputProps> = (props) => {
 	const { label, srOnly, message, className, style, required, noMargin, ...rest } = props;
@@ -19,13 +19,14 @@ export const FormInput: FC<FormInputProps> = (props) => {
 
 export interface FormInputProps
 	extends InputHTMLAttributes<HTMLInputElement>,
-		Pick<TextareaHTMLAttributes<HTMLTextAreaElement>, 'cols' | 'rows'>,
-		Pick<ElementBorders, 'pill' | 'rounded' | 'sharp'> {
+		Pick<TextareaHTMLAttributes<HTMLTextAreaElement>, "cols" | "rows">,
+		Pick<ElementBorders, "pill" | "rounded" | "sharp"> {
 	as?: ElementType;
 	label?: string;
 	srOnly?: boolean;
 	message?: string;
 	noMargin?: boolean;
+	ref?: any;
 }
 
 FormInput.defaultProps = {
