@@ -56,7 +56,13 @@ interface PropsType {
 const TextWrapper = styled.div`
 	.text-viwer {
 		display: inline-block;
+		text-align: left;
 		margin-top: 0.8rem;
+		white-space: pre-wrap; // will capture ennter and whitespace
+
+		@media (min-width: 992px) {
+			max-width: 70%;
+		}
 	}
 	.me-text {
 		padding: 6px 10px;
@@ -64,7 +70,6 @@ const TextWrapper = styled.div`
 		border-top-right-radius: 0;
 		background-color: #039474;
 		position: relative;
-		max-width: 70%;
 	}
 	#triangle-top-right {
 		width: 0;
@@ -82,7 +87,6 @@ const TextWrapper = styled.div`
 		border-radius: 7px;
 		background-color: #395566;
 		border-top-left-radius: 0;
-		max-width: 70%;
 	}
 
 	#triangle-top-left {
