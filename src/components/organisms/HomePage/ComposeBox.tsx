@@ -150,7 +150,11 @@ const Wrapper = styled.footer`
 	grid-template-columns: 1.5rem auto 1.5rem;
 	grid-column-gap: 1rem;
 	margin-top: auto;
-	margin-bottom: 1rem;
+	/* margin-bottom: 1rem; */
+
+	position: absolute;
+	width: 100%;
+	bottom: 0;
 
 	.text-box {
 		min-width: 50%;

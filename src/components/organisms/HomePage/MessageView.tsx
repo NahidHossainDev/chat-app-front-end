@@ -78,6 +78,7 @@ const Wrapper = styled(Col)`
 			width: 100%;
 			padding: 0 1rem;
 			margin-bottom: 0.6rem;
+			height: calc(100vh - 150px);
 		}
 	}
 `;
