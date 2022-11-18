@@ -1,25 +1,31 @@
 import { FormInput } from "@components/atoms";
+import { LoadingBtn } from "@components/molecules";
+import { AvatarUploader } from "@components/molecules/AvatarUploader";
 import { all_API } from "@libs/api/allApi";
-import { isEmail, isNotEmpty, isPhoneNumber, passValidation, useNewForm } from "@libs/hooks";
+import { isEmail, isNotEmpty, passValidation, useNewForm } from "@libs/hooks";
+import { setAuthUser } from "@store/user/user.action";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import styled from "styled-components";
 
+const initailValues = {
+	files: { value: null, message: "", validate: [] },
+	name: { value: "", message: "", validate: [isNotEmpty] },
+	email: { value: "", message: "", validate: [isNotEmpty, isEmail] },
+	// mobile: { value: "", message: "", validate: [isNotEmpty, isPhoneNumber] },
+	password: { value: "", message: "", validate: [isNotEmpty, passValidation] },
+};
+
 export const Signup: FC = () => {
-	const initailValues = {
-		files: { value: null, message: "", validate: [] },
-		name: { value: "", message: "", validate: [isNotEmpty] },
-		email: { value: "", message: "", validate: [isNotEmpty, isEmail] },
-		mobile: { value: "", message: "", validate: [isNotEmpty, isPhoneNumber] },
-		password: { value: "", message: "", validate: [isNotEmpty, passValidation] },
-	};
-	const [file, setFile] = useState(null);
+	const [file, setFile] = useState<File>(null);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const router = useRouter();
 
 	const onSubmitHandler = async () => {
+		setLoading(true);
 		const payload = new FormData();
 		payload.append(`file`, file);
 		for (const key in values) {
@@ -29,7 +35,8 @@ export const Signup: FC = () => {
 		try {
 			const { success, data, message } = await all_API.authRegister(payload);
 			if (success) {
-				router.push(router.query?.redirect ? String(router.query.redirect) : "/login");
+				setAuthUser(data);
+				router.push(router.query?.redirect ? String(router.query.redirect) : "/");
 			} else {
 				setErrors((prevState) => {
 					const err = { ...prevState };
@@ -39,7 +46,10 @@ export const Signup: FC = () => {
 					return err;
 				});
 			}
-		} catch (err) {}
+		} catch (err) {
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	const { values, errors, handleChange, handleSubmit, setErrors } = useNewForm(initailValues, onSubmitHandler);
@@ -67,7 +77,7 @@ export const Signup: FC = () => {
 					message={errors.email}
 					required
 				/>
-				<FormInput
+				{/* <FormInput
 					srOnly
 					type='string'
 					name='mobile'
@@ -76,7 +86,7 @@ export const Signup: FC = () => {
 					value={values.mobile}
 					message={errors.mobile}
 					required
-				/>
+				/> */}
 				<FormInput
 					srOnly
 					type='string'
@@ -87,18 +97,21 @@ export const Signup: FC = () => {
 					message={errors.password}
 					required
 				/>
-				<FormInput
+				{/* <small className='text-secondary'>Optional</small> */}
+				{/* <FormInput
 					srOnly
 					type='file'
 					placeholder='Avatar'
 					name='files'
 					onChange={(e) => setFile(e.target.files[0])}
 					message={errors.files}
-				/>
+				/> */}
 
-				<Button variant='primary' className='d-block px-5 mx-auto mb-4' type='submit'>
+				<AvatarUploader changeHandler={setFile} />
+
+				<LoadingBtn isLoading={loading} variant='primary' className='d-block px-5 mx-auto mb-4' type='submit'>
 					Create Account
-				</Button>
+				</LoadingBtn>
 
 				<span className='d-block text-center'>
 					<Link href='/login'>Go to login</Link>

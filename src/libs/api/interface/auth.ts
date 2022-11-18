@@ -13,7 +13,18 @@ interface ICreateAccErrors {
 	file?: IErr;
 }
 
-export interface ICreateAcc {
+interface INewUser {
+	id: string;
+	avatar: string;
+	name: string;
+	// mobile?: string;
+	email: string;
+	role: string;
+	token: string;
+	googleID?: string;
+}
+
+export interface ICreateAcc extends INewUser {
 	errors?: ICreateAccErrors;
 }
 
@@ -23,13 +34,6 @@ interface ILoginErr {
 	password?: IErr;
 }
 
-export interface IAuth {
-	_id: string;
-	name: string;
-	mobile?: string;
-	email: string;
-	role: string;
-	token: string;
-	googleID?: string;
+export interface IAuth extends INewUser {
 	errors?: ILoginErr;
 }
