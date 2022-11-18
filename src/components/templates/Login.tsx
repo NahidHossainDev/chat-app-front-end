@@ -1,4 +1,5 @@
 import { FormInput } from "@components/atoms";
+import { LoadingBtn } from "@components/molecules";
 import { all_API } from "@libs/api/allApi";
 import { IAuth } from "@libs/api/interface";
 import { isNotEmpty, useNewForm } from "@libs/hooks";
@@ -6,17 +7,19 @@ import Icon, { google } from "@libs/icons";
 import { setAuthUser } from "@store/user/user.action";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FC, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
+import { FC, useEffect, useState } from "react";
+import { Form } from "react-bootstrap";
 import styled from "styled-components";
 
-export const Login: FC<{ data?: IAuth }> = ({ data }) => {
-	const initailValues = {
-		username: { value: "", message: "", validate: [isNotEmpty] },
-		password: { value: "", message: "", validate: [isNotEmpty] },
-		common: { value: "", message: "" },
-	};
+const initailValues = {
+	username: { value: "", message: "", validate: [isNotEmpty] },
+	password: { value: "", message: "", validate: [isNotEmpty] },
+	common: { value: "", message: "" },
+};
+const initialLoading = { google: false, login: false };
 
+export const Login: FC<{ data?: IAuth }> = ({ data }) => {
+	const [loading, setloading] = useState<typeof initialLoading>(initialLoading);
 	const router = useRouter();
 
 	useEffect(() => {
@@ -30,6 +33,7 @@ export const Login: FC<{ data?: IAuth }> = ({ data }) => {
 		if (values.password && values.username) {
 			const { password, username } = values;
 			try {
+				setloading((prev) => ({ ...prev, login: true }));
 				const { success, data, message } = await all_API.authSignin(username, password);
 				if (success) {
 					setAuthUser(data);
@@ -44,18 +48,25 @@ export const Login: FC<{ data?: IAuth }> = ({ data }) => {
 					});
 					setTimeout(() => setErrors({ common: "", username: "", password: "" }), 3000);
 				}
-			} catch (err) {}
+			} catch (err) {
+			} finally {
+				setloading((prev) => ({ ...prev, login: false }));
+			}
 		}
 	};
 
 	const handleGoogleAuthURL = async () => {
 		try {
+			setloading((prev) => ({ ...prev, google: true }));
 			const { success, data, message } = await all_API.getGoogleAuthURL();
 			if (success) {
 				// window.open(data.authURL, "_blank", "height=600,width=400");
 				router.push(data.authURL);
 			}
-		} catch (error) {}
+		} catch (error) {
+		} finally {
+			setloading((prev) => ({ ...prev, google: false }));
+		}
 	};
 
 	const { values, errors, handleChange, handleSubmit, setErrors } = useNewForm(initailValues, onSubmitHandler);
@@ -95,18 +106,24 @@ export const Login: FC<{ data?: IAuth }> = ({ data }) => {
 					</p>
 				)}
 
-				<Button variant='primary' type='submit' className='d-block px-5 mx-auto mb-4 mt-3'>
+				<LoadingBtn
+					isLoading={loading.login}
+					variant='primary'
+					type='submit'
+					className='d-block px-5 mx-auto mb-4 mt-3'
+				>
 					Login
-				</Button>
+				</LoadingBtn>
 
-				<Button
+				<LoadingBtn
+					isLoading={loading.google}
 					variant='primary'
 					type='button'
 					className='d-block px-3 mx-auto mb-4 mt-3'
 					onClick={handleGoogleAuthURL}
 				>
 					<Icon path={google} fill='white' height={20} width={20} /> Google Login
-				</Button>
+				</LoadingBtn>
 
 				<span className='d-block text-center'>
 					<Link href='/create-account'>Create New Account</Link>
