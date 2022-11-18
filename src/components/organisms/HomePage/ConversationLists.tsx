@@ -64,7 +64,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView }) 
 											</small>
 										)}
 									</p>
-									<small className='text-secondary position-relative'>{item?.mobile}</small>
+									<small className='text-secondary position-relative'>{item?.email}</small>
 								</div>
 								<span className={`text-primary2 ms-auto ${isActive ? "active-user" : ""}`} />
 							</ConversationListItem>
