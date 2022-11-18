@@ -37,5 +37,5 @@ interface PropsType {
 }
 
 const OffCanvasWrapper = styled(Offcanvas)`
-	width: 100%;
+	width: 100% !important;
 `;
