@@ -27,7 +27,7 @@ export const ConversationLists: FC<PropsType> = ({ activeUsers, isMobileView }) 
 	};
 
 	return (
-		<Wrapper md={3} sm={4} xs={isMobileView ? 12 : 5} className='h-100'>
+		<Wrapper lg={3} md={4} xs={isMobileView ? 12 : 5} className='h-100'>
 			<ConversationHeader user={user as ICreatorOrParticipant} />
 
 			<div className='VerticalScroller'>
@@ -118,7 +118,7 @@ const Wrapper = styled(Col)`
 		border-radius: 0.4rem;
 		text-align: center;
 		margin-top: auto;
-		margin-bottom: 0.6rem;
+		margin-bottom: 1rem;
 	}
 
 	.count {

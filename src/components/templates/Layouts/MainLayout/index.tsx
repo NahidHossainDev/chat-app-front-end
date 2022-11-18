@@ -3,9 +3,9 @@ import { Container } from "react-bootstrap";
 
 export const MainLayout: FC<PropsType> = ({ children }) => {
 	return (
-		<Container fluid='xl'>
-			<main>{children}</main>
-		</Container>
+		<main>
+			<Container fluid='xl'>{children}</Container>
+		</main>
 	);
 };
 

@@ -22,7 +22,7 @@ export const ComposeBox: FC<PropsType> = () => {
 	const dispatch = useDispatch();
 
 	const sendMessage = async () => {
-		if (text || (attachment[0].gDriveID && !loading)) {
+		if (text || (attachment[0]?.gDriveID && !loading)) {
 			const reciver =
 				currentConversation?.creator?.id === user?.id
 					? currentConversation.participant
@@ -122,7 +122,7 @@ export const ComposeBox: FC<PropsType> = () => {
 						value={text}
 						onChange={(e) => setText(e.target.value)}
 						onKeyDown={(e) => {
-							if (e.key === "Enter") {
+							if (e.key === "Enter" && !e.shiftKey) {
 								e.preventDefault();
 								sendMessage();
 							}
@@ -150,6 +150,7 @@ const Wrapper = styled.footer`
 	grid-template-columns: 1.5rem auto 1.5rem;
 	grid-column-gap: 1rem;
 	margin-top: auto;
+	margin-bottom: 1rem;
 
 	.text-box {
 		min-width: 50%;
