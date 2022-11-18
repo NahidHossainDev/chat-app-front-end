@@ -42,7 +42,6 @@ export const HomePage: FC = () => {
 
 	useEffect(() => {
 		socket.current.on("msg_seen", (data: ISeen) => {
-			console.log("msg_seen", { data });
 			if (data) {
 				dispatch(updateMsgSeen(data));
 				if (data.type === "SEEN") dispatch(updateLastSeenMsgId(data?.msgIDs[data?.msgIDs.length - 1]));
@@ -59,17 +58,8 @@ export const HomePage: FC = () => {
 			onDragEnd={setDragCountHandler}
 			onDrop={() => dispatch(clearDragCount())}
 		>
-			{isMobile ? (
-				<>
-					<SideBar />
-					<ConversationLists isMobileView activeUsers={activeUsers} />
-				</>
-			) : (
-				<>
-					<ConversationLists activeUsers={activeUsers} />
-					<MessageView />
-				</>
-			)}
+			<ConversationLists isMobileView={isMobile} activeUsers={activeUsers} />
+			{isMobile ? <SideBar /> : <MessageView />}
 		</Row>
 	);
 };
