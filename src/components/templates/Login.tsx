@@ -64,7 +64,6 @@ export const Login: FC<{ data?: IAuth }> = ({ data }) => {
 				router.push(data.authURL);
 			}
 		} catch (error) {
-		} finally {
 			setloading((prev) => ({ ...prev, google: false }));
 		}
 	};

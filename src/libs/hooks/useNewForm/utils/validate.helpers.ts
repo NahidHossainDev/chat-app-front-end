@@ -16,10 +16,9 @@ export const isEmail = (name: string, email: string): string | undefined => {
 };
 
 export const passValidation = (name: string, value: string): string | undefined => {
-	const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/; // eslint-disable-line
-	// const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // eslint-disable-line
+	const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // eslint-disable-line
 	const isValid = regex.test(value);
-	if (!isValid) return "Password needs minimum eight characters, at least one letter and one number";
+	if (!isValid) return "Minimum eight characters, at least one letter and one number";
 };
 
 export const isPhoneNumber = (name: string, value: string): string | undefined => {

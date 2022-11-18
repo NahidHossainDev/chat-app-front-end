@@ -97,19 +97,10 @@ export const Signup: FC = () => {
 					message={errors.password}
 					required
 				/>
-				{/* <small className='text-secondary'>Optional</small> */}
-				{/* <FormInput
-					srOnly
-					type='file'
-					placeholder='Avatar'
-					name='files'
-					onChange={(e) => setFile(e.target.files[0])}
-					message={errors.files}
-				/> */}
 
 				<AvatarUploader changeHandler={setFile} />
 
-				<LoadingBtn isLoading={loading} variant='primary' className='d-block px-5 mx-auto mb-4' type='submit'>
+				<LoadingBtn type='submit' isLoading={loading} variant='primary' className='d-block px-5 mx-auto mb-4'>
 					Create Account
 				</LoadingBtn>
 
